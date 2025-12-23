@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest - Sci-Fi Hero</title>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background: #1a1814;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: transparent;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   SCI-FI HERO SECTION - EARTHY PASTEL THEME
+   ============================================ */
+.hero {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: transparent;
+    z-index: 2;
+}
+
+/* --------------------------------------------
+   LAYER 1: ANIMATED GRID FLOOR (Tron style)
+   -------------------------------------------- */
+.grid-floor {
+    position: absolute;
+    bottom: 0;
+    left: -50%;
+    width: 200%;
+    height: 60%;
+    background: 
+        linear-gradient(90deg, transparent 49.5%, rgba(180, 140, 100, 0.15) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(180, 140, 100, 0.15) 50%, transparent 50.5%);
+    background-size: 60px 60px;
+    transform: perspective(500px) rotateX(60deg);
+    transform-origin: center top;
+    animation: gridScroll 20s linear infinite;
+    mask-image: linear-gradient(to top, white 0%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to top, white 0%, transparent 80%);
+}
+
+@keyframes gridScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+}
+
+/* Glowing horizon line */
+.horizon-glow {
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #c9a87c 20%, 
+        #e8b4b8 50%, 
+        #c9a87c 80%, 
+        transparent 100%
+    );
+    filter: blur(8px);
+    opacity: 0.5;
+}
+
+/* --------------------------------------------
+   LAYER 2: PARTICLE CONSTELLATION
+   -------------------------------------------- */
+.particles-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+/* --------------------------------------------
+   LAYER 3: CODE RAIN (Matrix style) - FULL PAGE
+   -------------------------------------------- */
+.code-rain-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.code-column {
+    position: absolute;
+    top: -100%;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #a8c69f;
+    text-shadow: 0 0 10px #a8c69f;
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+    animation: codeRain linear infinite;
+}
+
+@keyframes codeRain {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(200vh); }
+}
+
+/* Scratch-style code blocks floating */
+.scratch-block {
+    position: absolute;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+    opacity: 0;
+    z-index: 3;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.scratch-block.motion { background: linear-gradient(135deg, #4C97FF, #3373CC); }
+.scratch-block.looks { background: linear-gradient(135deg, #9966FF, #774DCB); }
+.scratch-block.sound { background: linear-gradient(135deg, #CF63CF, #A63DA6); }
+.scratch-block.events { background: linear-gradient(135deg, #FFBF00, #CC9900); }
+.scratch-block.control { background: linear-gradient(135deg, #FFAB19, #CF8B17); }
+.scratch-block.sensing { background: linear-gradient(135deg, #5CB1D6, #2E8EB8); }
+
+/* Floating musical notes */
+.music-note {
+    position: absolute;
+    font-size: 24px;
+    color: #e8b4b8;
+    text-shadow: 0 0 20px #e8b4b8;
+    opacity: 0;
+    z-index: 3;
+}
+
+/* Piano keys floating */
+.piano-keys {
+    position: absolute;
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    z-index: 3;
+}
+
+.piano-key {
+    width: 20px;
+    height: 60px;
+    background: white;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.piano-key.black {
+    width: 14px;
+    height: 40px;
+    background: #1a1a2e;
+    margin-left: -8px;
+    margin-right: -8px;
+    z-index: 1;
+}
+
+/* --------------------------------------------
+   SCRATCH CAT SPRITE
+   -------------------------------------------- */
+.scratch-cat {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    z-index: 10;
+    opacity: 0;
+    filter: drop-shadow(0 0 30px rgba(255, 171, 25, 0.6));
+}
+
+.scratch-cat img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+}
+
+/* Speech bubble */
+.cat-speech {
+    position: absolute;
+    background: white;
+    color: #333;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    z-index: 11;
+    border: 2px solid #FFAB19;
+}
+
+.cat-speech::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 25px;
+    border-width: 10px 8px 0;
+    border-style: solid;
+    border-color: white transparent transparent;
+}
+
+/* --------------------------------------------
+   ESP32 MICROCONTROLLER CHIPS
+   -------------------------------------------- */
+.esp32-chip {
+    position: absolute;
+    width: 80px;
+    height: 50px;
+    background: linear-gradient(145deg, #1a1a2e, #0d0d1a);
+    border-radius: 4px;
+    border: 1px solid #333;
+    z-index: 8;
+    opacity: 0;
+    box-shadow: 
+        0 4px 15px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    gap: 4px;
+}
+
+.esp32-chip::before {
+    content: 'ESP32';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Courier New', monospace;
+    font-size: 8px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+}
+
+/* Chip pins on sides */
+.esp32-chip::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 8px;
+    width: 6px;
+    height: 34px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #888 0px,
+        #888 3px,
+        transparent 3px,
+        transparent 6px
+    );
+}
+
+.chip-pins-right {
+    position: absolute;
+    right: -6px;
+    top: 8px;
+    width: 6px;
+    height: 34px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #888 0px,
+        #888 3px,
+        transparent 3px,
+        transparent 6px
+    );
+}
+
+/* LED indicators on chip */
+.chip-leds {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.chip-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #333;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.chip-led.power {
+    background: #a8c69f;
+    box-shadow: 0 0 8px #a8c69f, 0 0 15px #a8c69f;
+    animation: ledGlow 1s ease-in-out infinite;
+}
+
+.chip-led.tx {
+    background: #333;
+    animation: ledBlink 0.1s ease-in-out infinite;
+    animation-play-state: paused;
+}
+
+.chip-led.rx {
+    background: #333;
+    animation: ledBlink 0.15s ease-in-out infinite;
+    animation-play-state: paused;
+}
+
+.chip-led.tx.active {
+    animation-play-state: running;
+}
+
+.chip-led.rx.active {
+    animation-play-state: running;
+}
+
+@keyframes ledGlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes ledBlink {
+    0%, 100% { background: #333; box-shadow: none; }
+    50% { background: #7eb8c9; box-shadow: 0 0 8px #7eb8c9; }
+}
+
+/* Chip components (capacitors, etc) */
+.chip-components {
+    display: flex;
+    gap: 4px;
+    margin-top: auto;
+}
+
+.chip-component {
+    width: 8px;
+    height: 4px;
+    background: #555;
+    border-radius: 1px;
+}
+
+.chip-component.cap {
+    background: linear-gradient(90deg, #666, #444, #666);
+}
+
+/* USB port on chip */
+.chip-usb {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 6px;
+    background: #888;
+    border-radius: 0 0 2px 2px;
+}
+
+/* WiFi signal icon */
+.chip-wifi {
+    position: absolute;
+    top: -15px;
+    right: 5px;
+    font-size: 12px;
+    color: #a8c69f;
+    opacity: 0;
+    animation: wifiPulse 2s ease-in-out infinite;
+}
+
+@keyframes wifiPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* --------------------------------------------
+   CIRCUIT BOARD TRACES
+   -------------------------------------------- */
+.circuit-traces {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.circuit-trace {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, #a8c69f, transparent);
+    height: 2px;
+    transform-origin: left center;
+}
+
+.circuit-trace.vertical {
+    width: 2px;
+    height: auto;
+    background: linear-gradient(180deg, transparent, #a8c69f, transparent);
+}
+
+.circuit-node {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #a8c69f;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #a8c69f;
+}
+
+/* Data packet animation along traces */
+.data-packet {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #a8c69f;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #a8c69f, 0 0 15px #a8c69f;
+    opacity: 0;
+}
+
+/* --------------------------------------------
+   SENSOR MODULE
+   -------------------------------------------- */
+.sensor-module {
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    background: linear-gradient(145deg, #0066cc, #004499);
+    border-radius: 3px;
+    z-index: 7;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.sensor-module::before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background: radial-gradient(circle, #111 40%, #333 60%);
+    border-radius: 50%;
+    border: 2px solid #555;
+}
+
+.sensor-module .sensor-pins {
+    position: absolute;
+    bottom: -8px;
+    display: flex;
+    gap: 4px;
+}
+
+.sensor-module .sensor-pin {
+    width: 2px;
+    height: 8px;
+    background: #888;
+}
+
+/* Sensor reading display */
+.sensor-reading {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 24, 20, 0.9);
+    color: #a8c69f;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+}
+
+/* --------------------------------------------
+   LAYER 5: FLOATING ORBS (enhanced)
+   -------------------------------------------- */
+.floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.4;
+    z-index: 1;
+}
+
+.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #c9a87c 0%, transparent 70%);
+    top: 10%;
+    left: -10%;
+}
+
+.orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #e8b4b8 0%, transparent 70%);
+    top: 50%;
+    right: -5%;
+}
+
+.orb-3 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, #a8c69f 0%, transparent 70%);
+    bottom: 20%;
+    left: 20%;
+}
+
+/* --------------------------------------------
+   LAYER 6: WAVEFORM
+   -------------------------------------------- */
+.waveform-container {
+    position: absolute;
+    bottom: 25%;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 1;
+    opacity: 0.3;
+}
+
+.waveform-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.waveform-path {
+    fill: none;
+    stroke: url(#waveGradient);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+/* --------------------------------------------
+   HERO CONTENT
+   -------------------------------------------- */
+.hero-content {
+    position: relative;
+    z-index: 100;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #f5f0e8 0%, #e8d4c4 50%, #d4c4b0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.hero h1 .highlight {
+    position: relative;
+    display: inline-block;
+}
+
+.hero h1 .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #c9a87c, #e8b4b8);
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.tagline {
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    margin-bottom: 2rem;
+    color: rgba(255,255,255,0.8);
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.cta-btn {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-btn.primary {
+    background: linear-gradient(135deg, #c9a87c, #a8876a);
+    color: white;
+    border: none;
+}
+
+.cta-btn.secondary {
+    background: transparent;
+    color: #f5f0e8;
+    border: 2px solid rgba(201, 168, 124, 0.4);
+}
+
+.cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(201, 168, 124, 0.3);
+}
+
+.cta-btn.secondary:hover {
+    background: rgba(201, 168, 124, 0.1);
+    border-color: rgba(201, 168, 124, 0.6);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    opacity: 0;
+}
+
+.scroll-indicator .line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, #c9a87c, transparent);
+    animation: scrollLine 1.5s ease-in-out infinite;
+}
+
+@keyframes scrollLine {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.5); opacity: 0.5; }
+}
+
+/* ============================================
+   COURSES SECTION
+   ============================================ */
+.demo-section {
+    min-height: 100vh;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+
+/* Section parallax background elements */
+.section-bg-elements {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.section-orb-1 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(201, 168, 124, 0.15) 0%, transparent 70%);
+    position: absolute;
+    top: 10%;
+    right: -10%;
+    filter: blur(40px);
+}
+
+.section-orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(168, 198, 159, 0.15) 0%, transparent 70%);
+    position: absolute;
+    bottom: 10%;
+    left: -5%;
+    filter: blur(40px);
+}
+
+.section-circuits {
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+}
+
+.courses-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.section-title {
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: #f5f0e8;
+    margin-bottom: 60px;
+    background: linear-gradient(135deg, #f5f0e8 0%, #c9a87c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    align-items: stretch;
+}
+
+.course-card {
+    background: rgba(45, 42, 36, 0.8);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(201, 168, 124, 0.2);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    opacity: 0;
+    transform: translateY(50px);
+    will-change: transform;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.course-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    border-color: rgba(201, 168, 124, 0.4);
+}
+
+.card-image {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.card-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.8;
+}
+
+.scratch-bg {
+    background: linear-gradient(135deg, #FFAB19 0%, #FF8C1A 100%);
+}
+
+.piano-bg {
+    background: linear-gradient(135deg, #2d2a24 0%, #1a1814 50%, #c9a87c 100%);
+}
+
+.electronics-bg {
+    background: linear-gradient(135deg, #1a4a1a 0%, #0d2d0d 100%);
+}
+
+.card-icon {
+    font-size: 4rem;
+    z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* Arduino SVG Icon */
+.arduino-icon {
+    width: 120px;
+    height: 80px;
+    font-size: 1rem;
+}
+
+.arduino-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 12px rgba(0, 151, 157, 0.5));
+}
+
+.arduino-led {
+    animation: ledBlink 1s ease-in-out infinite;
+}
+
+@keyframes arduinoLedBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.card-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-content h3 {
+    color: #f5f0e8;
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+.card-content p {
+    color: rgba(245, 240, 232, 0.7);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.card-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-meta span {
+    background: rgba(201, 168, 124, 0.2);
+    color: #c9a87c;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.card-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #c9a87c, #a8876a);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(201, 168, 124, 0.3);
+}
+
+/* Card Buttons Container */
+.card-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.card-buttons .card-btn {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+}
+
+.card-buttons .card-btn.primary {
+    background: linear-gradient(135deg, #c9a87c, #a8876a);
+}
+
+.card-buttons .card-btn.demo {
+    background: transparent;
+    border: 2px solid rgba(201, 168, 124, 0.5);
+    color: #c9a87c;
+}
+
+.card-buttons .card-btn.demo:hover {
+    background: rgba(201, 168, 124, 0.15);
+    border-color: #c9a87c;
+    box-shadow: 0 5px 20px rgba(201, 168, 124, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE - GRACEFUL DECLUTTER
+   ============================================ */
+
+/* Large tablet - reduce elements */
+@media (max-width: 1024px) {
+    .scratch-block:nth-child(n+5) {
+        display: none;
+    }
+    
+    .floating-orb {
+        transform: scale(0.7);
+        opacity: 0.25;
+    }
+    
+    .piano-keys {
+        transform: scale(0.8) !important;
+    }
+    
+    .music-note:nth-child(n+3) {
+        display: none;
+    }
+}
+
+/* Tablet - simplify */
+@media (max-width: 768px) {
+    /* Card buttons stack on mobile */
+    .card-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .card-buttons .card-btn {
+        width: 100%;
+    }
+    
+    /* Hide most floating elements */
+    .scratch-block:nth-child(n+3) {
+        display: none;
+    }
+    
+    .scratch-block {
+        transform: scale(0.85);
+        opacity: 0.75;
+    }
+    
+    /* Keep piano - position top right */
+    .piano-keys {
+        right: 5% !important;
+        top: 12% !important;
+        transform: scale(0.7) rotate(-10deg) !important;
+        opacity: 0.8;
+    }
+    
+    .music-note {
+        display: none;
+    }
+    
+    /* Hide ESP32 and sensors */
+    .esp32-chip {
+        display: none !important;
+    }
+    
+    .sensor-module {
+        display: none !important;
+    }
+    
+    .circuit-traces {
+        opacity: 0.05;
+    }
+    
+    .floating-orb {
+        transform: scale(0.5);
+        opacity: 0.15;
+    }
+    
+    /* Simplify grid */
+    .grid-floor {
+        opacity: 0.25;
+    }
+    
+    /* Reduce code rain */
+    .code-rain-container {
+        opacity: 0.12;
+    }
+    
+    /* Keep Scratch cat - position top left */
+    .scratch-cat {
+        width: 100px !important;
+        height: 100px !important;
+        left: 5% !important;
+        top: 10% !important;
+    }
+    
+    .cat-speech {
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+    
+    /* Adjust hero content */
+    .hero-content {
+        padding: 1rem;
+    }
+    
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .tagline {
+        font-size: 1rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .cta-btn {
+        padding: 0.9rem 1.8rem;
+        font-size: 1rem;
+    }
+    
+    /* Waveform lighter */
+    .waveform-container {
+        opacity: 0.15;
+    }
+    
+    /* Section backgrounds lighter */
+    .section-orb-1,
+    .section-orb-2,
+    .blog-orb-1,
+    .blog-orb-2 {
+        transform: scale(0.4);
+        opacity: 0.1;
+    }
+    
+    /* Course cards - 2 cards side by side or stack */
+    .courses-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
+    }
+}
+
+/* Mobile - minimal, clean */
+@media (max-width: 480px) {
+    /* Hide all floating decorations except key visuals */
+    .scratch-block {
+        display: none !important;
+    }
+    
+    .floating-orb {
+        display: none;
+    }
+    
+    .circuit-traces {
+        display: none;
+    }
+    
+    .waveform-container {
+        display: none;
+    }
+    
+    .grid-floor {
+        opacity: 0.15;
+    }
+    
+    .horizon-glow {
+        opacity: 0.3;
+    }
+    
+    .code-rain-container {
+        opacity: 0.08;
+    }
+    
+    /* Scratch cat - top left */
+    .scratch-cat {
+        width: 70px !important;
+        height: 70px !important;
+        left: 5% !important;
+        top: 8% !important;
+    }
+    
+    .cat-speech {
+        font-size: 9px;
+        padding: 4px 8px;
+        top: -28px;
+        left: 35px;
+    }
+    
+    /* Piano - top right (smaller) */
+    .piano-keys {
+        right: 5% !important;
+        top: 8% !important;
+        transform: scale(0.5) rotate(-10deg) !important;
+        opacity: 0.7;
+    }
+    
+    /* Hide ESP32 on mobile */
+    .esp32-chip {
+        display: none !important;
+    }
+    
+    .sensor-module {
+        display: none !important;
+    }
+    
+    /* Hero content adjustments */
+    .hero h1 {
+        font-size: 1.6rem;
+        line-height: 1.3;
+    }
+    
+    .hero h1 .highlight {
+        display: block;
+    }
+    
+    .tagline {
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .cta-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .scroll-indicator {
+        display: none;
+    }
+    
+    /* Courses section */
+    .demo-section {
+        padding: 60px 15px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+    
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-image {
+        height: 140px;
+    }
+    
+    .card-content {
+        padding: 20px;
+    }
+    
+    .card-content h3 {
+        font-size: 1.25rem;
+    }
+    
+    .card-content p {
+        font-size: 0.9rem;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Full Page Code Rain Background -->
+<div class="code-rain-container" id="codeRain"></div>
+
+<section class="hero">
+    <!-- Layer 1: Tron Grid Floor -->
+    <div class="grid-floor"></div>
+    <div class="horizon-glow"></div>
+    
+    <!-- Layer 2: Particle Constellation (Canvas) -->
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+    
+    <!-- Scratch Blocks (will be animated) -->
+    <div class="scratch-block motion" id="block1">move 10 steps</div>
+    <div class="scratch-block looks" id="block2">say "Hello!"</div>
+    <div class="scratch-block sound" id="block3">play sound 🎵</div>
+    <div class="scratch-block events" id="block4">when ⚑ clicked</div>
+    <div class="scratch-block control" id="block5">repeat 10</div>
+    <div class="scratch-block sensing" id="block6">touching edge?</div>
+    
+    <!-- Musical Notes -->
+    <div class="music-note" id="note1">♪</div>
+    <div class="music-note" id="note2">♫</div>
+    <div class="music-note" id="note3">♩</div>
+    <div class="music-note" id="note4">♬</div>
+    
+    <!-- Piano Keys -->
+    <div class="piano-keys" id="piano1">
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+    </div>
+    
+    <!-- Circuit Board Traces Background -->
+    <div class="circuit-traces" id="circuitTraces">
+        <!-- Generated by JS -->
+    </div>
+    
+    <!-- Scratch Cat Sprite -->
+    <div class="scratch-cat" id="scratchCat">
+        <img src="data:image/png;base64,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" alt="Scratch Cat" style="width: 100%; height: 100%; object-fit: contain;">
+        <div class="cat-speech" id="catSpeech">Hello! Let's code! 🎮</div>
+    </div>
+    
+    <!-- ESP32 Chips -->
+    <div class="esp32-chip" id="esp32_3">
+        <div class="chip-pins-right"></div>
+        <div class="chip-leds">
+            <div class="chip-led power"></div>
+            <div class="chip-led tx" id="led_tx_3"></div>
+            <div class="chip-led rx" id="led_rx_3"></div>
+        </div>
+        <div class="chip-components">
+            <div class="chip-component cap"></div>
+            <div class="chip-component cap"></div>
+            <div class="chip-component"></div>
+        </div>
+        <div class="chip-usb"></div>
+        <div class="chip-wifi">📶</div>
+    </div>
+    
+    <!-- Sensor Modules -->
+    <div class="sensor-module" id="sensor1">
+        <div class="sensor-pins">
+            <div class="sensor-pin"></div>
+            <div class="sensor-pin"></div>
+            <div class="sensor-pin"></div>
+        </div>
+        <div class="sensor-reading" id="sensorReading1">TEMP: 24.5°C</div>
+    </div>
+    
+    <div class="sensor-module" id="sensor2">
+        <div class="sensor-pins">
+            <div class="sensor-pin"></div>
+            <div class="sensor-pin"></div>
+            <div class="sensor-pin"></div>
+            <div class="sensor-pin"></div>
+        </div>
+        <div class="sensor-reading" id="sensorReading2">MOISTURE: 67%</div>
+    </div>
+    
+    <!-- Layer 5: Floating Orbs -->
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    
+    <!-- Layer 6: Waveform -->
+    <div class="waveform-container">
+        <svg class="waveform-svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#c9a87c" />
+                    <stop offset="50%" stop-color="#e8b4b8" />
+                    <stop offset="100%" stop-color="#c9a87c" />
+                </linearGradient>
+            </defs>
+            <path class="waveform-path" id="waveformPath"></path>
+        </svg>
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="hero-content">
+        <h1>Welcome to <span class="highlight">EduQuest</span></h1>
+        <p class="tagline">Where Code Meets Creativity & Music Comes Alive</p>
+        <div class="cta-buttons">
+            <a href="#courses" class="cta-btn primary">Explore Courses</a>
+            <a href="#courses" class="cta-btn secondary">Watch Demo</a>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <div class="line"></div>
+        <span>SCROLL</span>
+    </div>
+</section>
+
+<section class="demo-section" id="courses">
+    <!-- Parallax background elements for courses section -->
+    <div class="section-bg-elements">
+        <div class="floating-orb section-orb-1"></div>
+        <div class="floating-orb section-orb-2"></div>
+        <div class="circuit-traces section-circuits" id="sectionCircuits"></div>
+    </div>
+    
+    <div class="courses-container">
+        <h2 class="section-title">Explore Our Courses</h2>
+        <div class="courses-grid">
+            <!-- Scratch Coding Card -->
+            <div class="course-card" data-parallax="0.1">
+                <div class="card-image scratch-bg">
+                    <div class="card-icon">🎮</div>
+                </div>
+                <div class="card-content">
+                    <h3>Scratch Coding</h3>
+                    <p>Learn programming fundamentals through fun, interactive projects. Create games, animations, and stories while developing problem-solving skills!</p>
+                    <div class="card-meta">
+                        <span class="level">Beginner</span>
+                        <span class="duration">12 weeks</span>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="card-btn primary">Start Learning</button>
+                        <button class="card-btn demo" onclick="window.open('https://www.youtube.com/watch?v=-7NsCccNc78&list=PLeTjwPog_1gxEjyWcWdZWfzvow0_AktLe', '_blank')">▶ Demo</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Piano Card -->
+            <div class="course-card" data-parallax="0.15">
+                <div class="card-image piano-bg">
+                    <div class="card-icon">🎹</div>
+                </div>
+                <div class="card-content">
+                    <h3>Piano</h3>
+                    <p>Master the basics of piano playing with step-by-step lessons covering music theory, proper technique, and your favorite songs.</p>
+                    <div class="card-meta">
+                        <span class="level">All Levels</span>
+                        <span class="duration">16 weeks</span>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="card-btn primary">Start Learning</button>
+                        <button class="card-btn demo" onclick="window.open('https://www.youtube.com/watch?v=8hsHuY5siYQ&list=PLeTjwPog_1gzy1fMyEaH2VaYwfKJ4V95_', '_blank')">▶ Demo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// ============================================
+// GSAP ANIMATIONS & EFFECTS
+// ============================================
+
+gsap.registerPlugin(ScrollTrigger);
+
+// --------------------------------------------
+// 1. PARTICLE CONSTELLATION SYSTEM
+// --------------------------------------------
+class ParticleConstellation {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = { x: null, y: null, radius: 150 };
+        
+        this.resize();
+        this.init();
+        this.animate();
+        
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.x;
+            this.mouse.y = e.y;
+        });
+    }
+    
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    init() {
+        this.particles = [];
+        const numParticles = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+        
+        for (let i = 0; i < numParticles; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1,
+                color: `hsla(${Math.random() * 40 + 25}, 40%, 70%, ${Math.random() * 0.5 + 0.3})`
+            });
+        }
+    }
+    
+    animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Update and draw particles
+        this.particles.forEach((p, i) => {
+            // Move
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Bounce off edges
+            if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+            
+            // Mouse interaction
+            if (this.mouse.x) {
+                const dx = p.x - this.mouse.x;
+                const dy = p.y - this.mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < this.mouse.radius) {
+                    const force = (this.mouse.radius - dist) / this.mouse.radius;
+                    p.x += dx * force * 0.02;
+                    p.y += dy * force * 0.02;
+                }
+            }
+            
+            // Draw particle
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            this.ctx.fillStyle = p.color;
+            this.ctx.fill();
+            
+            // Draw connections
+            this.particles.slice(i + 1).forEach(p2 => {
+                const dx = p.x - p2.x;
+                const dy = p.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 120) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.x, p.y);
+                    this.ctx.lineTo(p2.x, p2.y);
+                    this.ctx.strokeStyle = `rgba(201, 168, 124, ${0.2 * (1 - dist / 120)})`;
+                    this.ctx.lineWidth = 0.5;
+                    this.ctx.stroke();
+                }
+            });
+        });
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Initialize particles
+const particleSystem = new ParticleConstellation(document.getElementById('particlesCanvas'));
+
+// --------------------------------------------
+// 2. CODE RAIN GENERATOR
+// --------------------------------------------
+function createCodeRain() {
+    const container = document.getElementById('codeRain');
+    const codeSnippets = [
+        'if (learning) {',
+        'function create() {',
+        'while (curious) {',
+        'let skill = new',
+        'for (i in dreams)',
+        'return success;',
+        'async learn() {',
+        'await mastery;',
+        'class Student {',
+        'import { joy }',
+        '🎮 play()',
+        '🎨 draw()',
+        '🎵 compose()',
+        'move(10)',
+        'say("Hi!")',
+        'repeat(∞)',
+        'forever {',
+        'broadcast()',
+        'glide(x, y)',
+        'think("...")'
+    ];
+    
+    const numColumns = Math.floor(window.innerWidth / 100);
+    
+    for (let i = 0; i < numColumns; i++) {
+        const column = document.createElement('div');
+        column.className = 'code-column';
+        column.style.left = `${(i / numColumns) * 100}%`;
+        column.style.animationDuration = `${8 + Math.random() * 12}s`;
+        column.style.animationDelay = `${Math.random() * -20}s`;
+        column.style.opacity = 0.1 + Math.random() * 0.3;
+        
+        // Random code content
+        let content = '';
+        for (let j = 0; j < 20; j++) {
+            content += codeSnippets[Math.floor(Math.random() * codeSnippets.length)] + ' ';
+        }
+        column.textContent = content;
+        
+        // Alternate colors
+        if (Math.random() > 0.7) {
+            column.style.color = '#c9a0c9';
+            column.style.textShadow = '0 0 10px #c9a0c9';
+        }
+        
+        container.appendChild(column);
+    }
+}
+
+createCodeRain();
+
+// --------------------------------------------
+// 4. ANIMATED WAVEFORM
+// --------------------------------------------
+function animateWaveform() {
+    const path = document.getElementById('waveformPath');
+    let phase = 0;
+    
+    function draw() {
+        let d = 'M 0 50';
+        
+        for (let x = 0; x <= 1440; x += 10) {
+            const y = 50 + 
+                Math.sin((x * 0.02) + phase) * 20 +
+                Math.sin((x * 0.01) + phase * 0.5) * 15 +
+                Math.sin((x * 0.03) + phase * 1.5) * 10;
+            d += ` L ${x} ${y}`;
+        }
+        
+        path.setAttribute('d', d);
+        phase += 0.03;
+        requestAnimationFrame(draw);
+    }
+    
+    draw();
+}
+
+animateWaveform();
+
+// --------------------------------------------
+// 5. FLOATING SCRATCH BLOCKS
+// --------------------------------------------
+function animateScratchBlocks() {
+    const blocks = document.querySelectorAll('.scratch-block');
+    
+    // Position blocks spread out on the right side of the screen
+    const blockPositions = [
+        { x: '35%', y: '15%' },   // block 1 - upper middle
+        { x: '55%', y: '22%' },   // block 2 - upper right
+        { x: '42%', y: '70%' },   // block 3 - lower middle
+        { x: '60%', y: '65%' },   // block 4 - lower right
+        { x: '30%', y: '45%' },   // block 5 - middle left
+        { x: '68%', y: '40%' }    // block 6 - middle right
+    ];
+    
+    blocks.forEach((block, i) => {
+        const pos = blockPositions[i] || { x: `${30 + i * 10}%`, y: `${20 + i * 10}%` };
+        
+        gsap.set(block, {
+            left: pos.x,
+            top: pos.y,
+            rotation: Math.random() * 20 - 10
+        });
+        
+        // Floating animation
+        gsap.to(block, {
+            opacity: 0.85,
+            duration: 1,
+            delay: i * 0.3
+        });
+        
+        // Continuous float - smaller movement to stay clustered
+        gsap.to(block, {
+            y: `+=${20 + Math.random() * 30}`,
+            x: `+=${Math.random() * 20 - 10}`,
+            rotation: `+=${Math.random() * 6 - 3}`,
+            duration: 3 + Math.random() * 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: i * 0.2
+        });
+        
+        // Parallax on scroll
+        gsap.to(block, {
+            yPercent: -100 - i * 30,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1
+            }
+        });
+    });
+}
+
+animateScratchBlocks();
+
+// --------------------------------------------
+// 6. FLOATING MUSICAL NOTES
+// --------------------------------------------
+function animateMusicNotes() {
+    const notes = document.querySelectorAll('.music-note');
+    
+    notes.forEach((note, i) => {
+        const startX = 20 + (i * 20);
+        const startY = 60 + Math.random() * 20;
+        
+        gsap.set(note, {
+            left: `${startX}%`,
+            top: `${startY}%`
+        });
+        
+        // Fade in
+        gsap.to(note, {
+            opacity: 0.7,
+            duration: 1,
+            delay: 1 + i * 0.3
+        });
+        
+        // Float up and pulse
+        gsap.to(note, {
+            y: -100 - Math.random() * 200,
+            x: Math.random() * 100 - 50,
+            rotation: 360,
+            duration: 6 + Math.random() * 4,
+            repeat: -1,
+            ease: 'none',
+            delay: i * 0.5
+        });
+        
+        // Scale pulse
+        gsap.to(note, {
+            scale: 1.3,
+            duration: 0.5 + Math.random() * 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+    });
+}
+
+animateMusicNotes();
+
+// --------------------------------------------
+// 7. FLOATING PIANO KEYS
+// --------------------------------------------
+function animatePianoKeys() {
+    const piano = document.getElementById('piano1');
+    
+    gsap.set(piano, {
+        right: '10%',
+        top: '30%',
+        rotation: -15
+    });
+    
+    gsap.to(piano, {
+        opacity: 0.6,
+        duration: 1.5,
+        delay: 0.5
+    });
+    
+    // Float animation
+    gsap.to(piano, {
+        y: 30,
+        rotation: -10,
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+    });
+    
+    // Animate individual keys pressing
+    const keys = piano.querySelectorAll('.piano-key:not(.black)');
+    keys.forEach((key, i) => {
+        gsap.to(key, {
+            y: 5,
+            backgroundColor: '#e0e0e0',
+            duration: 0.15,
+            repeat: -1,
+            repeatDelay: 2 + Math.random() * 3,
+            yoyo: true,
+            delay: i * 0.5
+        });
+    });
+    
+    // Parallax
+    gsap.to(piano, {
+        yPercent: -150,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.5
+        }
+    });
+}
+
+animatePianoKeys();
+
+// --------------------------------------------
+// 8. SCRATCH CAT SPRITE ANIMATION
+// --------------------------------------------
+function animateScratchCat() {
+    const cat = document.getElementById('scratchCat');
+    const speech = document.getElementById('catSpeech');
+    
+    // Position cat at top left, above the Welcome text
+    gsap.set(cat, {
+        left: '8%',
+        top: '12%',
+        rotation: -5
+    });
+    
+    gsap.set(speech, {
+        top: '-45px',
+        left: '50px'
+    });
+    
+    // Fade in
+    gsap.to(cat, {
+        opacity: 1,
+        duration: 1,
+        delay: 1.5
+    });
+    
+    // Bounce animation
+    gsap.to(cat, {
+        y: -15,
+        rotation: 5,
+        duration: 0.8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+    });
+    
+    // Speech bubble cycle
+    const speeches = [
+        "Hello! Let's code! 🎮",
+        "move 10 steps →",
+        "Happy Coding! 💬",
+        "repeat forever 🔄",
+        "when ⚑ clicked",
+        "play sound 🎵"
+    ];
+    let speechIndex = 0;
+    
+    function cycleSpeech() {
+        gsap.to(speech, {
+            opacity: 0,
+            y: -10,
+            duration: 0.3,
+            onComplete: () => {
+                speechIndex = (speechIndex + 1) % speeches.length;
+                speech.textContent = speeches[speechIndex];
+                gsap.to(speech, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.3
+                });
+            }
+        });
+    }
+    
+    // Show speech bubble
+    gsap.to(speech, {
+        opacity: 1,
+        duration: 0.5,
+        delay: 2
+    });
+    
+    setInterval(cycleSpeech, 3000);
+    
+    // Parallax on scroll
+    gsap.to(cat, {
+        yPercent: -200,
+        xPercent: 50,
+        rotation: 15,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.5
+        }
+    });
+}
+
+animateScratchCat();
+
+// --------------------------------------------
+// 9. ESP32 CHIPS ANIMATION
+// --------------------------------------------
+function animateESP32Chips() {
+    const chips = [
+        { el: '#esp32_3', x: '5%', y: '65%', rot: 8 }
+    ];
+    
+    chips.forEach((chip, i) => {
+        const el = document.querySelector(chip.el);
+        const wifi = el.querySelector('.chip-wifi');
+        const txLed = el.querySelector('.chip-led.tx');
+        const rxLed = el.querySelector('.chip-led.rx');
+        
+        // Position
+        gsap.set(el, {
+            left: chip.x,
+            top: chip.y,
+            rotation: chip.rot
+        });
+        
+        // Fade in
+        gsap.to(el, {
+            opacity: 0.9,
+            duration: 1,
+            delay: 0.8 + i * 0.3
+        });
+        
+        // Show WiFi icon
+        gsap.to(wifi, {
+            opacity: 1,
+            duration: 0.5,
+            delay: 1.5 + i * 0.3
+        });
+        
+        // Floating animation
+        gsap.to(el, {
+            y: `+=${15 + i * 5}`,
+            rotation: chip.rot + (i % 2 === 0 ? 3 : -3),
+            duration: 3 + i * 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+        
+        // Blink TX/RX LEDs randomly
+        function blinkLeds() {
+            const blinkTx = Math.random() > 0.5;
+            const blinkRx = Math.random() > 0.5;
+            
+            if (blinkTx) {
+                txLed.classList.add('active');
+                setTimeout(() => txLed.classList.remove('active'), 100 + Math.random() * 200);
+            }
+            if (blinkRx) {
+                rxLed.classList.add('active');
+                setTimeout(() => rxLed.classList.remove('active'), 100 + Math.random() * 200);
+            }
+            
+            setTimeout(blinkLeds, 500 + Math.random() * 1500);
+        }
+        
+        setTimeout(blinkLeds, 2000 + i * 500);
+        
+        // Parallax
+        gsap.to(el, {
+            yPercent: -80 - i * 40,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1 + i * 0.3
+            }
+        });
+    });
+}
+
+animateESP32Chips();
+
+// --------------------------------------------
+// 10. SENSOR MODULES ANIMATION
+// --------------------------------------------
+function animateSensors() {
+    const sensors = [
+        { el: '#sensor1', x: '70%', y: '75%', reading: '#sensorReading1', values: ['TEMP: 24.5°C', 'TEMP: 25.1°C', 'TEMP: 24.8°C'] },
+        { el: '#sensor2', x: '15%', y: '80%', reading: '#sensorReading2', values: ['MOISTURE: 67%', 'MOISTURE: 65%', 'MOISTURE: 68%'] }
+    ];
+    
+    sensors.forEach((sensor, i) => {
+        const el = document.querySelector(sensor.el);
+        const reading = document.querySelector(sensor.reading);
+        
+        // Position
+        gsap.set(el, {
+            left: sensor.x,
+            top: sensor.y,
+            rotation: (i % 2 === 0 ? -5 : 5)
+        });
+        
+        // Fade in
+        gsap.to(el, {
+            opacity: 0.85,
+            duration: 1,
+            delay: 1.2 + i * 0.4
+        });
+        
+        // Show reading
+        gsap.to(reading, {
+            opacity: 1,
+            duration: 0.5,
+            delay: 2 + i * 0.4
+        });
+        
+        // Float
+        gsap.to(el, {
+            y: `+=${10 + i * 5}`,
+            rotation: (i % 2 === 0 ? 0 : -2),
+            duration: 2.5 + i * 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+        
+        // Update readings
+        let valueIndex = 0;
+        setInterval(() => {
+            valueIndex = (valueIndex + 1) % sensor.values.length;
+            gsap.to(reading, {
+                opacity: 0,
+                duration: 0.2,
+                onComplete: () => {
+                    reading.textContent = sensor.values[valueIndex];
+                    gsap.to(reading, { opacity: 1, duration: 0.2 });
+                }
+            });
+        }, 2000 + i * 500);
+        
+        // Parallax
+        gsap.to(el, {
+            yPercent: -120 - i * 30,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1.2
+            }
+        });
+    });
+}
+
+animateSensors();
+
+// --------------------------------------------
+// 11. CIRCUIT TRACES ANIMATION
+// --------------------------------------------
+function createCircuitTraces() {
+    const container = document.getElementById('circuitTraces');
+    const numTraces = 12;
+    const numNodes = 8;
+    
+    // Create traces
+    for (let i = 0; i < numTraces; i++) {
+        const trace = document.createElement('div');
+        trace.className = 'circuit-trace' + (Math.random() > 0.5 ? ' vertical' : '');
+        
+        const isVertical = trace.classList.contains('vertical');
+        
+        if (isVertical) {
+            trace.style.left = `${10 + Math.random() * 80}%`;
+            trace.style.top = `${Math.random() * 60}%`;
+            trace.style.height = `${50 + Math.random() * 150}px`;
+        } else {
+            trace.style.left = `${Math.random() * 70}%`;
+            trace.style.top = `${20 + Math.random() * 60}%`;
+            trace.style.width = `${80 + Math.random() * 200}px`;
+        }
+        
+        container.appendChild(trace);
+        
+        // Animate trace opacity
+        gsap.to(trace, {
+            opacity: 0.3 + Math.random() * 0.4,
+            duration: 1 + Math.random() * 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: Math.random() * 2
+        });
+    }
+    
+    // Create nodes
+    for (let i = 0; i < numNodes; i++) {
+        const node = document.createElement('div');
+        node.className = 'circuit-node';
+        node.style.left = `${10 + Math.random() * 80}%`;
+        node.style.top = `${20 + Math.random() * 60}%`;
+        
+        container.appendChild(node);
+        
+        // Pulse animation
+        gsap.to(node, {
+            scale: 1.5,
+            opacity: 0.5,
+            duration: 0.8 + Math.random() * 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: Math.random() * 2
+        });
+    }
+    
+    // Create data packets that travel
+    for (let i = 0; i < 5; i++) {
+        const packet = document.createElement('div');
+        packet.className = 'data-packet';
+        container.appendChild(packet);
+        
+        function animatePacket() {
+            const startX = Math.random() * 100;
+            const startY = 20 + Math.random() * 60;
+            const endX = Math.random() * 100;
+            const endY = 20 + Math.random() * 60;
+            
+            gsap.set(packet, {
+                left: `${startX}%`,
+                top: `${startY}%`,
+                opacity: 0
+            });
+            
+            gsap.to(packet, {
+                left: `${endX}%`,
+                top: `${endY}%`,
+                opacity: 1,
+                duration: 1 + Math.random() * 2,
+                ease: 'none',
+                onComplete: () => {
+                    gsap.to(packet, {
+                        opacity: 0,
+                        duration: 0.3,
+                        onComplete: animatePacket
+                    });
+                }
+            });
+        }
+        
+        setTimeout(animatePacket, i * 800);
+    }
+}
+
+createCircuitTraces();
+
+// --------------------------------------------
+// 12. FLOATING ORBS ANIMATION
+// --------------------------------------------
+document.querySelectorAll('.floating-orb').forEach((orb, i) => {
+    // Continuous float
+    gsap.to(orb, {
+        x: `+=${30 + i * 20}`,
+        y: `+=${20 + i * 15}`,
+        duration: 5 + i * 2,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+    });
+    
+    // Parallax
+    gsap.to(orb, {
+        yPercent: -50 - i * 30,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 2
+        }
+    });
+});
+
+// --------------------------------------------
+// 13. HERO CONTENT ENTRANCE
+// --------------------------------------------
+const heroTl = gsap.timeline({ delay: 0.5 });
+
+heroTl
+    .to('.hero h1', {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: 'power4.out'
+    })
+    .to('.hero h1 .highlight::after', {
+        scaleX: 1,
+        duration: 0.8,
+        ease: 'power2.out'
+    }, '-=0.5')
+    .to('.tagline', {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power3.out'
+    }, '-=0.6')
+    .to('.cta-buttons', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out'
+    }, '-=0.5')
+    .to('.scroll-indicator', {
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out'
+    }, '-=0.3');
+
+// Underline animation (workaround since pseudo-elements can't be directly animated)
+gsap.to('.hero h1 .highlight', {
+    '--underline-scale': 1,
+    duration: 0.8,
+    delay: 1.2,
+    ease: 'power2.out'
+});
+
+// --------------------------------------------
+// 14. PARALLAX ON SCROLL
+// --------------------------------------------
+
+// Hero content fades out
+gsap.to('.hero-content', {
+    yPercent: -30,
+    opacity: 0,
+    ease: 'none',
+    scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: '50% top',
+        scrub: 1
+    }
+});
+
+// Grid floor intensifies
+gsap.to('.grid-floor', {
+    opacity: 0.3,
+    ease: 'none',
+    scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+    }
+});
+
+// Scroll indicator fades
+gsap.to('.scroll-indicator', {
+    opacity: 0,
+    y: -20,
+    scrollTrigger: {
+        trigger: '.hero',
+        start: '5% top',
+        end: '20% top',
+        scrub: true
+    }
+});
+
+console.log('🚀 Sci-Fi Hero initialized!');
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// --------------------------------------------
+// 15. COURSE CARDS ANIMATION
+// --------------------------------------------
+function animateCourseCards() {
+    const cards = document.querySelectorAll('.course-card');
+    
+    cards.forEach((card, i) => {
+        gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: i * 0.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+    });
+    
+    // Animate section title
+    gsap.from('.section-title', {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.section-title',
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+}
+
+animateCourseCards();
+
+// --------------------------------------------
+// 16. COURSES SECTION PARALLAX
+// --------------------------------------------
+function animateCoursesParallax() {
+    // Parallax for section orbs
+    gsap.to('.section-orb-1', {
+        yPercent: -30,
+        xPercent: -10,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.demo-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 2
+        }
+    });
+    
+    gsap.to('.section-orb-2', {
+        yPercent: 30,
+        xPercent: 10,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.demo-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 2
+        }
+    });
+    
+    // Parallax for course cards at different speeds
+    document.querySelectorAll('.course-card').forEach((card, i) => {
+        const speed = parseFloat(card.dataset.parallax) || 0.1;
+        
+        gsap.to(card, {
+            yPercent: -10 * (i + 1) * speed,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.demo-section',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1
+            }
+        });
+    });
+    
+    // Create circuit traces for courses section
+    const sectionCircuits = document.getElementById('sectionCircuits');
+    if (sectionCircuits) {
+        for (let i = 0; i < 8; i++) {
+            const trace = document.createElement('div');
+            trace.className = 'circuit-trace' + (Math.random() > 0.5 ? ' vertical' : '');
+            trace.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                ${trace.classList.contains('vertical') ? 'height: ' + (50 + Math.random() * 100) + 'px;' : 'width: ' + (80 + Math.random() * 150) + 'px;'}
+            `;
+            sectionCircuits.appendChild(trace);
+            
+            gsap.to(trace, {
+                opacity: 0.3,
+                duration: 1 + Math.random() * 2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut',
+                delay: Math.random() * 2
+            });
+        }
+        
+        // Add floating nodes
+        for (let i = 0; i < 5; i++) {
+            const node = document.createElement('div');
+            node.className = 'circuit-node';
+            node.style.cssText = `
+                position: absolute;
+                left: ${10 + Math.random() * 80}%;
+                top: ${10 + Math.random() * 80}%;
+            `;
+            sectionCircuits.appendChild(node);
+            
+            gsap.to(node, {
+                scale: 1.5,
+                opacity: 0.5,
+                duration: 0.8 + Math.random() * 0.5,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut',
+                delay: Math.random() * 2
+            });
+        }
+    }
+}
+
+animateCoursesParallax();
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+
+</body>
+</html>
