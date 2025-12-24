@@ -642,20 +642,8 @@
             
             <!-- Blog List View -->
             <div id="blogList">
-                <!-- Tag Cloud - Generated dynamically -->
-                <div class="tag-cloud" id="tagCloud"></div>
-                
-                <!-- Blog Grid - Posts loaded here -->
-                <div class="blog-grid" id="blogGrid"></div>
-                
-                <!-- Loading State -->
-                <div id="loadingState" class="blog-coming-soon">
-                    <div class="coming-soon-icon">⏳</div>
-                    <h2>Loading posts...</h2>
-                </div>
-                
-                <!-- Empty State (shown if no posts) -->
-                <div id="emptyState" class="blog-coming-soon" style="display: none;">
+                <!-- Coming Soon State - Replace with blog grid when posts exist -->
+                <div class="blog-coming-soon">
                     <div class="coming-soon-icon">✍️</div>
                     <h2>Coming Soon!</h2>
                     <p>I'm working on some exciting blog posts about coding, piano, and my learning journey. Stay tuned for tips, tutorials, and fun stories!</p>
@@ -666,6 +654,20 @@
                         <span class="topic-tag">🎯 Project Tutorials</span>
                     </div>
                 </div>
+
+                <!-- 
+                FUTURE: When you have blog posts, replace the above with:
+                
+                <div class="tag-cloud" id="tagCloud">
+                    <button class="tag-btn active">all</button>
+                    <button class="tag-btn">scratch</button>
+                    <button class="tag-btn">piano</button>
+                </div>
+                
+                <div class="blog-grid" id="blogGrid">
+                    Blog cards will be dynamically loaded here
+                </div>
+                -->
             </div>
 
             <!-- Blog Post Full View (hidden by default) -->
@@ -719,16 +721,13 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showBlogPost(postFile, postTitle, postDate) {
+        function showBlogPost(postFile) {
             // Fetch and render Markdown post
             fetch(`posts/${postFile}`)
                 .then(response => response.text())
                 .then(markdown => {
                     const html = marked.parse(markdown);
-                    document.getElementById('postContent').innerHTML = `
-                        <div class="post-meta">📅 ${formatDate(postDate)}</div>
-                        <div class="post-content">${html}</div>
-                    `;
+                    document.getElementById('postContent').innerHTML = html;
                     document.getElementById('blogList').style.display = 'none';
                     document.getElementById('blogPostFull').classList.add('active');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -737,114 +736,6 @@
                     console.error('Error loading post:', err);
                 });
         }
-
-        // Format date nicely
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('en-GB', { 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric' 
-            });
-        }
-
-        // Store all posts for filtering
-        let allPosts = [];
-        let currentFilter = 'all';
-
-        // Load and display blog posts
-        async function loadBlogPosts() {
-            try {
-                const response = await fetch('posts/index.json');
-                const posts = await response.json();
-                
-                // Hide loading state
-                document.getElementById('loadingState').style.display = 'none';
-                
-                if (posts.length === 0) {
-                    document.getElementById('emptyState').style.display = 'block';
-                    return;
-                }
-                
-                // Sort by date (newest first)
-                allPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                // Build tag cloud
-                buildTagCloud(allPosts);
-                
-                // Display posts
-                displayPosts(allPosts);
-                
-                // Animate cards
-                gsap.from('.blog-card', {
-                    opacity: 0,
-                    y: 30,
-                    duration: 0.5,
-                    stagger: 0.1,
-                    ease: 'power3.out'
-                });
-                
-            } catch (err) {
-                console.error('Error loading posts:', err);
-                document.getElementById('loadingState').style.display = 'none';
-                document.getElementById('emptyState').style.display = 'block';
-            }
-        }
-
-        // Build tag filter buttons
-        function buildTagCloud(posts) {
-            const tagCloud = document.getElementById('tagCloud');
-            const allTags = new Set();
-            
-            posts.forEach(post => {
-                post.tags.forEach(tag => allTags.add(tag));
-            });
-            
-            let html = `<button class="tag-btn active" onclick="filterPosts('all')">all</button>`;
-            allTags.forEach(tag => {
-                html += `<button class="tag-btn" onclick="filterPosts('${tag}')">${tag}</button>`;
-            });
-            
-            tagCloud.innerHTML = html;
-        }
-
-        // Filter posts by tag
-        function filterPosts(tag) {
-            currentFilter = tag;
-            
-            // Update active button
-            document.querySelectorAll('.tag-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === tag);
-            });
-            
-            // Filter and display
-            const filtered = tag === 'all' 
-                ? allPosts 
-                : allPosts.filter(post => post.tags.includes(tag));
-            
-            displayPosts(filtered);
-        }
-
-        // Render post cards
-        function displayPosts(posts) {
-            const blogGrid = document.getElementById('blogGrid');
-            
-            blogGrid.innerHTML = posts.map(post => `
-                <div class="blog-card" onclick="showBlogPost('${post.file}', '${post.title.replace(/'/g, "\\'")}', '${post.date}')">
-                    <div class="blog-card-content">
-                        <div class="blog-card-date">📅 ${formatDate(post.date)}</div>
-                        <h2>${post.title}</h2>
-                        <p class="blog-card-excerpt">${post.excerpt}</p>
-                        <div class="blog-card-tags">
-                            ${post.tags.map(tag => `<span class="blog-card-tag">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Load posts when page loads
-        loadBlogPosts();
 
         // GSAP Animations
         gsap.registerPlugin(ScrollTrigger);

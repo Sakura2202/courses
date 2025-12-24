@@ -56,8 +56,7 @@
         .scratch-cat,
         .piano-keys,
         .scratch-block,
-        .floating-orb,
-        .code-column {
+        .floating-orb {
             will-change: transform;
             transform: translateZ(0);
             backface-visibility: hidden;
@@ -334,44 +333,7 @@
         }
 
         /* --------------------------------------------
-   LAYER 3: CODE RAIN (Matrix style) - FULL PAGE
-   -------------------------------------------- */
-        .code-rain-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .code-column {
-            position: absolute;
-            top: -100%;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.4;
-            color: #a8c69f;
-            text-shadow: 0 0 10px #a8c69f;
-            writing-mode: vertical-rl;
-            white-space: nowrap;
-            animation: codeRain linear infinite;
-        }
-
-        @keyframes codeRain {
-            0% {
-                transform: translateY(0);
-            }
-
-            100% {
-                transform: translateY(200vh);
-            }
-        }
-
-        /* Scratch-style code blocks floating */
+   /* Scratch-style code blocks floating */
         .scratch-block {
             position: absolute;
             padding: 8px 16px;
@@ -845,31 +807,24 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            margin-bottom: 1rem;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            margin-bottom: 2rem;
             background: linear-gradient(135deg, #f5f0e8 0%, #e8d4c4 50%, #d4c4b0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             opacity: 0;
             transform: translateY(50px);
+            text-align: center;
+            line-height: 1.4;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero h1 .highlight {
-            position: relative;
-            display: inline-block;
-        }
-
-        .hero h1 .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #c9a87c, #e8b4b8);
-            transform: scaleX(0);
-            transform-origin: left;
+            color: #c9a87c;
+            -webkit-text-fill-color: #c9a87c;
         }
 
         .tagline {
@@ -1506,11 +1461,6 @@
                 opacity: 0.25;
             }
 
-            /* Reduce code rain */
-            .code-rain-container {
-                opacity: 0.18;
-            }
-
             /* Keep Scratch cat - position top left */
             .scratch-cat {
                 width: 100px !important;
@@ -1530,11 +1480,8 @@
             }
 
             .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .tagline {
-                font-size: 1rem;
+                font-size: 1.6rem;
+                max-width: 400px;
             }
 
             .cta-buttons {
@@ -1652,10 +1599,6 @@
                 opacity: 0.3;
             }
 
-            .code-rain-container {
-                opacity: 0.15;
-            }
-
             /* Scratch cat - top left */
             .scratch-cat {
                 width: 70px !important;
@@ -1690,17 +1633,9 @@
 
             /* Hero content adjustments */
             .hero h1 {
-                font-size: 1.6rem;
-                line-height: 1.3;
-            }
-
-            .hero h1 .highlight {
-                display: block;
-            }
-
-            .tagline {
-                font-size: 0.85rem;
-                margin-bottom: 1.5rem;
+                font-size: 1.4rem;
+                line-height: 1.4;
+                max-width: 320px;
             }
 
             .cta-btn {
@@ -1764,7 +1699,6 @@
     </nav>
 
     <!-- Full Page Code Rain Background -->
-    <div class="code-rain-container" id="codeRain"></div>
 
     <section class="hero">
         <!-- Layer 1: Tron Grid Floor -->
@@ -1870,8 +1804,7 @@
 
         <!-- Hero Content -->
         <div class="hero-content">
-            <h1>Welcome to <span class="highlight">EduQuest</span></h1>
-            <p class="tagline">Where Code Meets Creativity & Music Comes Alive</p>
+            <h1>Where Code Meets Creativity & Music Comes Alive</h1>
             <div class="cta-buttons">
                 <a href="#courses" class="cta-btn primary">Explore Courses</a>
                 <a href="#courses" class="cta-btn secondary">Watch Demo</a>
@@ -2078,65 +2011,6 @@
 
         // Initialize particles
         const particleSystem = new ParticleConstellation(document.getElementById('particlesCanvas'));
-
-        // --------------------------------------------
-        // 2. CODE RAIN GENERATOR
-        // --------------------------------------------
-        function createCodeRain() {
-            const container = document.getElementById('codeRain');
-            const codeSnippets = [
-                'if (learning) {',
-                'function create() {',
-                'while (curious) {',
-                'let skill = new',
-                'for (i in dreams)',
-                'return success;',
-                'async learn() {',
-                'await mastery;',
-                'class Student {',
-                'import { joy }',
-                '🎮 play()',
-                '🎨 draw()',
-                '🎵 compose()',
-                'move(10)',
-                'say("Hi!")',
-                'repeat(∞)',
-                'forever {',
-                'broadcast()',
-                'glide(x, y)',
-                'think("...")'
-            ];
-
-            // Limit columns to prevent memory issues
-            const maxColumns = 20;
-            const numColumns = Math.min(maxColumns, Math.floor(window.innerWidth / 100));
-
-            for (let i = 0; i < numColumns; i++) {
-                const column = document.createElement('div');
-                column.className = 'code-column';
-                column.style.left = `${(i / numColumns) * 100}%`;
-                column.style.animationDuration = `${8 + Math.random() * 12}s`;
-                column.style.animationDelay = `${Math.random() * -20}s`;
-                column.style.opacity = 0.1 + Math.random() * 0.3;
-
-                // Random code content
-                let content = '';
-                for (let j = 0; j < 20; j++) {
-                    content += codeSnippets[Math.floor(Math.random() * codeSnippets.length)] + ' ';
-                }
-                column.textContent = content;
-
-                // Alternate colors
-                if (Math.random() > 0.7) {
-                    column.style.color = '#c9a0c9';
-                    column.style.textShadow = '0 0 10px #c9a0c9';
-                }
-
-                container.appendChild(column);
-            }
-        }
-
-        createCodeRain();
 
         // --------------------------------------------
         // 4. ANIMATED WAVEFORM
@@ -2711,17 +2585,6 @@
                 duration: 1.2,
                 ease: 'power4.out'
             })
-            .to('.hero h1 .highlight::after', {
-                scaleX: 1,
-                duration: 0.8,
-                ease: 'power2.out'
-            }, '-=0.5')
-            .to('.tagline', {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power3.out'
-            }, '-=0.6')
             .to('.cta-buttons', {
                 opacity: 1,
                 y: 0,
@@ -2733,14 +2596,6 @@
                 duration: 1,
                 ease: 'power2.out'
             }, '-=0.3');
-
-        // Underline animation (workaround since pseudo-elements can't be directly animated)
-        gsap.to('.hero h1 .highlight', {
-            '--underline-scale': 1,
-            duration: 0.8,
-            delay: 1.2,
-            ease: 'power2.out'
-        });
 
         // --------------------------------------------
         // 14. PARALLAX ON SCROLL (Simplified for smooth scrolling)
@@ -2941,7 +2796,7 @@
         // ============================================
         (function() {
             // Track all CSS animations
-            const animatedElements = document.querySelectorAll('.code-column, .grid-floor, .floating-orb, .scratch-block, .music-note, .piano-keys, .esp32-chip, .waveform-bar');
+            const animatedElements = document.querySelectorAll('.grid-floor, .floating-orb, .scratch-block, .music-note, .piano-keys, .esp32-chip, .waveform-bar');
             
             // Store original animation states
             const originalAnimations = new Map();
