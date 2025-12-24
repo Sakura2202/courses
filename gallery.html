@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - Vibha | Anime Art & Scratch Projects</title>
+    <title>Gallery - Vibha | Art & Scratch Projects</title>
 
-    <meta name="description" content="Explore Vibha's creative gallery featuring anime art and interactive Scratch projects.">
+    <meta name="description" content="Explore Vibha's creative gallery featuring art and interactive Scratch projects.">
     <meta name="author" content="Vibha Agarwal">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -339,9 +339,10 @@
            ANIME ART GALLERY (Masonry Grid)
            ============================================ */
         .art-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: flex-start;
         }
 
         .art-card {
@@ -350,41 +351,23 @@
             overflow: hidden;
             border: 1px solid rgba(201, 168, 124, 0.15);
             transition: all 0.4s ease;
-            cursor: pointer;
         }
 
         .art-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: rgba(201, 168, 124, 0.4);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .art-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.4s ease;
+        .pinterest-embed {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
         }
 
-        .art-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .art-card-info {
-            padding: 20px;
-        }
-
-        .art-card-info h3 {
-            color: #f5f0e8;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .art-card-info p {
-            color: rgba(245, 240, 232, 0.6);
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .pinterest-embed iframe {
+            border-radius: 8px;
+            max-width: 100%;
         }
 
         /* Empty state */
@@ -603,17 +586,14 @@
             }
 
             .art-gallery {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 480px) {
-            .page-header {
-                padding: 90px 20px 20px;
-            }
-
-            .art-card img {
-                height: 200px;
+            .pinterest-embed iframe {
+                width: 100%;
+                max-width: 345px;
             }
 
             .scratch-embed {
@@ -647,7 +627,7 @@
     <!-- Gallery Tabs -->
     <div class="gallery-tabs">
         <button class="tab-btn active" data-tab="scratch">🎮 Scratch Projects</button>
-        <button class="tab-btn" data-tab="anime">🎨 Anime Art</button>
+        <button class="tab-btn" data-tab="art">🎨 Art</button>
     </div>
 
     <!-- Scratch Projects Section -->
@@ -659,8 +639,8 @@
         </div>
     </section>
 
-    <!-- Anime Art Section -->
-    <section class="gallery-section" id="anime-section">
+    <!-- Art Section -->
+    <section class="gallery-section" id="art-section">
         <div class="gallery-container">
             <div class="art-gallery" id="artGallery">
                 <!-- Art cards will be loaded dynamically from JavaScript -->
@@ -738,15 +718,16 @@
         // GALLERY DATA - EDIT THIS TO ADD YOUR CONTENT
         // ============================================
         
-        // ANIME ART - Add your images here
-        // Put images in: gallery/anime/ folder
-        const animeArtworks = [
-            // Uncomment and edit to add your artworks:
-            // {
-            //     title: "Artwork Title",
-            //     image: "gallery/anime/your-image.jpg",
-            //     description: "Description of your artwork"
-            // },
+        // ART - Add your Pinterest pin IDs here
+        // Get the ID and dimensions from Pinterest embed code
+        const artworks = [
+            {
+                pinId: "1143351424165363812",
+                width: 345,
+                height: 325
+            },
+            // Add more - width and height are required:
+            // { pinId: "xxx", width: 236, height: 450 },
         ];
 
         // SCRATCH PROJECTS - Add your project IDs here
@@ -780,12 +761,12 @@
         function renderArtGallery() {
             const gallery = document.getElementById('artGallery');
             
-            if (animeArtworks.length === 0) {
+            if (artworks.length === 0) {
                 gallery.innerHTML = `
                     <div class="empty-gallery">
                         <div class="empty-gallery-icon">🎨</div>
                         <h3>Coming Soon!</h3>
-                        <p>Anime artwork will be showcased here.</p>
+                        <p>Artwork will be showcased here.</p>
                     </div>
                 `;
                 return;
@@ -793,14 +774,12 @@
             
             gallery.innerHTML = '';
             
-            animeArtworks.forEach((art, index) => {
+            artworks.forEach((art) => {
                 const card = document.createElement('div');
                 card.className = 'art-card';
                 card.innerHTML = `
-                    <img src="${art.image}" alt="${art.title}" loading="lazy" onclick="openLightbox('${art.image}', '${art.title}')">
-                    <div class="art-card-info">
-                        <h3>${art.title}</h3>
-                        ${art.description ? `<p>${art.description}</p>` : ''}
+                    <div class="pinterest-embed">
+                        <iframe src="https://assets.pinterest.com/ext/embed.html?id=${art.pinId}" width="${art.width}" height="${art.height}" frameborder="0" scrolling="no"></iframe>
                     </div>
                 `;
                 gallery.appendChild(card);
