@@ -39,6 +39,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: transparent;
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ============================================
@@ -243,9 +246,10 @@
            ABOUT SECTION
            ============================================ */
         .about-section {
-            padding: 60px 20px 100px;
+            padding: 90px 20px 80px;
             position: relative;
             z-index: 2;
+            flex: 1;
         }
 
         .about-orb-1 {
@@ -388,9 +392,18 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
         }
 
-        .expertise-icon {
-            font-size: 3rem;
+        .expertise-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
             margin-bottom: 15px;
+        }
+
+        .expertise-header h3 {
+            color: #f5f0e8;
+            font-size: 1.4rem;
+            margin: 0;
         }
 
         .expertise-badge {
@@ -402,13 +415,7 @@
             color: #a8c69f;
             font-size: 0.75rem;
             font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .expertise-card h3 {
-            color: #f5f0e8;
-            font-size: 1.5rem;
-            margin-bottom: 12px;
+            white-space: nowrap;
         }
 
         .expertise-card p {
@@ -486,13 +493,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
-        .superpower-icon {
-            font-size: 2.2rem;
-            display: flex;
-            align-items: center;
+        .superpower-header h3 {
+            color: #f5f0e8;
+            font-size: 1.15rem;
+            margin: 0;
         }
 
         .superpower-year {
@@ -500,8 +508,9 @@
             background: rgba(201, 168, 124, 0.2);
             border-radius: 12px;
             color: #c9a87c;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .superpower-badge {
@@ -509,17 +518,12 @@
             background: rgba(168, 198, 159, 0.2);
             border-radius: 12px;
             color: #a8c69f;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
+            white-space: nowrap;
         }
 
-        .superpower-card h3 {
-            color: #f5f0e8;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .superpower-card p {
+        .superpower-card > p {
             color: rgba(245, 240, 232, 0.7);
             font-size: 0.95rem;
             line-height: 1.6;
@@ -808,12 +812,6 @@
         </ul>
     </nav>
 
-    <!-- Page Header -->
-    <header class="page-header">
-        <h1>About Me</h1>
-        <p class="page-subtitle">Coder. Pianist. Problem Solver.</p>
-    </header>
-
     <!-- About Section -->
     <section class="about-section">
         <div class="about-container">
@@ -833,27 +831,20 @@
             <div class="expertise-section">
                 <div class="expertise-grid">
                     <div class="expertise-card piano-card">
-                        <div class="expertise-icon">🎹</div>
-                        <div class="expertise-badge">Grade 8 ABRSM</div>
-                        <h3>Piano</h3>
-                        <p>Completed all levels up to <strong>Grade 8</strong> with ABRSM certification. From classical pieces to contemporary tunes, the piano has been a rewarding musical journey.</p>
-                        <div class="expertise-detail">
-                            <span class="detail-tag">Classical</span>
-                            <span class="detail-tag">ABRSM Certified</span>
+                        <div class="expertise-header">
+                            <h3>Piano</h3>
+                            <span class="expertise-badge">Grade 8 ABRSM</span>
                         </div>
+                        <p>Completed all levels up to <strong>Grade 8</strong> with ABRSM certification. From classical pieces to contemporary tunes, the piano has been a rewarding musical journey.</p>
                     </div>
                     
                     <div class="expertise-card coding-card">
-                        <div class="expertise-icon">💻</div>
-                        <div class="expertise-badge">Since Primary School</div>
-                        <h3>Scratch Coding</h3>
-                        <p>Started coding in primary school and never stopped! I create games, animations, and interactive stories — and love helping others discover the joy of coding through school coding clubs.</p>
-                        <div class="expertise-detail">
-                            <span class="detail-tag">Game Design</span>
-                            <span class="detail-tag">Animations</span>
-                            <span class="detail-tag">Teaching</span>
+                        <div class="expertise-header">
+                            <h3>Coding</h3>
+                            <span class="expertise-badge">Since Primary School</span>
                         </div>
-                        <a href="gallery.html" class="view-work-btn">🎮 View My Projects →</a>
+                        <p>Started coding in primary school and never stopped! I create games, animations, and interactive stories — and love helping others discover the joy of coding through school coding clubs.</p>
+                        <a href="gallery.html" class="view-work-btn">View My Projects →</a>
                     </div>
                 </div>
             </div>
@@ -866,66 +857,48 @@
                     <!-- CyberFirst -->
                     <div class="superpower-card cyber-card">
                         <div class="superpower-header">
-                            <span class="superpower-icon">🔐</span>
+                            <h3>Cybersecurity</h3>
                             <span class="superpower-year">2023</span>
                         </div>
-                        <h3>Cybersecurity</h3>
                         <p>Represented my school nationally in the <strong>CyberFirst Girls' Competition</strong> organised by the National Cyber Security Centre. Our team was recognised as the top scoring team in the national qualifier round.</p>
-                        <div class="superpower-tags">
-                            <span>Cryptography</span>
-                            <span>Networks</span>
-                            <span>Teamwork</span>
-                        </div>
                     </div>
 
                     <!-- Maths -->
                     <div class="superpower-card maths-card">
                         <div class="superpower-header">
-                            <span class="superpower-icon">🧮</span>
+                            <h3>National Maths</h3>
                             <span class="superpower-badge">3rd Place</span>
                         </div>
-                        <h3>National Maths</h3>
                         <p>Placed 3rd nationally in the All England Grammar School Mathematician Of The Year Competition 2023.</p>
                     </div>
 
                     <!-- BAE Systems -->
                     <div class="superpower-card industry-card">
                         <div class="superpower-header">
-                            <span class="superpower-icon">🚀</span>
+                            <h3>Industry Experience</h3>
                             <span class="superpower-badge">Silver Award</span>
                         </div>
-                        <h3>Industry Experience</h3>
                         <p>Completed work experience at <strong>BAE Systems</strong> and earned the Silver Level Industrial Cadet certificate.</p>
-                        <div class="superpower-tags">
-                            <span>#IndustrialCadets</span>
-                            <span>#STEAMstars</span>
-                        </div>
                     </div>
 
                     <!-- Dance -->
                     <div class="superpower-card dance-card">
                         <div class="superpower-header">
-                            <span class="superpower-icon">✨</span>
+                            <h3>Classical Dance</h3>
                             <span class="superpower-year">Grade 3</span>
                         </div>
-                        <h3>Classical Dance</h3>
                         <p>Learning <strong>Bharatnatyam</strong> — an ancient Indian classical dance form that combines rhythm, expression, and storytelling.</p>
-                        <div class="superpower-tags">
-                            <span>Bharatnatyam</span>
-                            <span>Indian Classical</span>
-                        </div>
                     </div>
 
                     <!-- YouTube Channel -->
                     <div class="superpower-card youtube-card">
                         <div class="superpower-header">
-                            <span class="superpower-icon">📺</span>
+                            <h3>Dusk Art</h3>
                             <span class="superpower-badge">YouTube</span>
                         </div>
-                        <h3>Dusk Art</h3>
                         <p>My creative corner on YouTube where I share art, projects, and more.</p>
                         <a href="https://www.youtube.com/@Dusk_Art22" target="_blank" class="youtube-link">
-                            <span class="yt-icon">▶</span> Visit Channel
+                            Visit Channel →
                         </a>
                     </div>
                 </div>

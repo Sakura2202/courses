@@ -42,6 +42,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: transparent;
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ============================================
@@ -264,9 +267,10 @@
            BLOG SECTION
            ============================================ */
         .blog-section {
-            padding: 0 20px 100px;
+            padding: 80px 20px 80px;
             position: relative;
             z-index: 2;
+            flex: 1;
         }
 
         .blog-container {
@@ -631,11 +635,6 @@
             <li><a href="blog.html" class="active">Blog</a></li>
         </ul>
     </nav>
-
-    <!-- Page Header -->
-    <header class="page-header">
-        <h1>Blog</h1>
-    </header>
 
     <!-- Blog Section -->
     <section class="blog-section">
