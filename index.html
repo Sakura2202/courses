@@ -37,12 +37,229 @@
 
         html {
             background: #1a1814;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: transparent;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* GPU acceleration for animated elements */
+        .hero-content,
+        .course-card,
+        .cta-btn,
+        .scratch-cat,
+        .piano-keys,
+        .scratch-block,
+        .floating-orb,
+        .code-column {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* ============================================
+           NAVIGATION BAR
+           ============================================ */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: 
+                linear-gradient(90deg, 
+                    transparent 0%, 
+                    rgba(168, 198, 159, 0.03) 25%, 
+                    rgba(201, 168, 124, 0.05) 50%, 
+                    rgba(168, 198, 159, 0.03) 75%, 
+                    transparent 100%
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(168, 198, 159, 0.03) 20px,
+                    rgba(168, 198, 159, 0.03) 21px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(168, 198, 159, 0.03) 40px,
+                    rgba(168, 198, 159, 0.03) 41px
+                ),
+                rgba(26, 24, 20, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(168, 198, 159, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .main-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(168, 198, 159, 0.4), transparent);
+            transform: translateY(-50%);
+        }
+
+        .main-nav::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            width: 8px;
+            height: 8px;
+            background: rgba(168, 198, 159, 0.5);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px rgba(168, 198, 159, 0.5);
+            animation: nodePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+            50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+        }
+
+        .main-nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(168, 198, 159, 0.02) 20px,
+                    rgba(168, 198, 159, 0.02) 21px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(168, 198, 159, 0.02) 40px,
+                    rgba(168, 198, 159, 0.02) 41px
+                ),
+                rgba(26, 24, 20, 0.95);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #f5f0e8;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #c9a87c, #e8b4b8);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #c9a87c;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: #c9a87c;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu Toggle */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: #f5f0e8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                max-width: 300px;
+                height: 100vh;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                background: rgba(26, 24, 20, 0.98);
+                backdrop-filter: blur(20px);
+                transition: right 0.4s ease;
+                border-left: 1px solid rgba(201, 168, 124, 0.2);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.25rem;
+            }
         }
 
         /* ============================================
@@ -984,6 +1201,230 @@
         }
 
         /* ============================================
+           ABOUT ME SECTION
+           ============================================ */
+        .about-section {
+            min-height: 100vh;
+            background: transparent;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .about-orb-1 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(201, 168, 124, 0.12) 0%, transparent 70%);
+            position: absolute;
+            top: 10%;
+            right: -10%;
+            filter: blur(40px);
+        }
+
+        .about-orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(232, 180, 184, 0.12) 0%, transparent 70%);
+            position: absolute;
+            bottom: 15%;
+            left: -5%;
+            filter: blur(40px);
+        }
+
+        .about-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .about-intro {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: rgba(45, 42, 36, 0.6);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(201, 168, 124, 0.15);
+        }
+
+        .about-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c9a87c, #e8b4b8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .avatar-emoji {
+            font-size: 3rem;
+        }
+
+        .about-text h3 {
+            color: #f5f0e8;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f5f0e8, #c9a87c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-text p {
+            color: rgba(245, 240, 232, 0.8);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .achievement-card {
+            background: rgba(45, 42, 36, 0.6);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(201, 168, 124, 0.15);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(201, 168, 124, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .achievement-card h4 {
+            color: #c9a87c;
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+
+        .achievement-card p {
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           BLOG SECTION
+           ============================================ */
+        .blog-section {
+            min-height: 60vh;
+            background: transparent;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .blog-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(168, 198, 159, 0.12) 0%, transparent 70%);
+            position: absolute;
+            top: 20%;
+            left: -8%;
+            filter: blur(40px);
+        }
+
+        .blog-orb-2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(201, 168, 124, 0.1) 0%, transparent 70%);
+            position: absolute;
+            bottom: 10%;
+            right: -5%;
+            filter: blur(40px);
+        }
+
+        .blog-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .blog-coming-soon {
+            text-align: center;
+            background: rgba(45, 42, 36, 0.6);
+            padding: 60px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(201, 168, 124, 0.15);
+        }
+
+        .coming-soon-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .blog-coming-soon h3 {
+            color: #f5f0e8;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .blog-coming-soon p {
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .blog-topics {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .topic-tag {
+            padding: 8px 18px;
+            background: rgba(201, 168, 124, 0.15);
+            border: 1px solid rgba(201, 168, 124, 0.3);
+            border-radius: 25px;
+            color: #c9a87c;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .site-footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(26, 24, 20, 0.9);
+            border-top: 1px solid rgba(201, 168, 124, 0.1);
+            z-index: 2;
+            position: relative;
+        }
+
+        .site-footer p {
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
    RESPONSIVE - GRACEFUL DECLUTTER
    ============================================ */
 
@@ -1067,7 +1508,7 @@
 
             /* Reduce code rain */
             .code-rain-container {
-                opacity: 0.12;
+                opacity: 0.18;
             }
 
             /* Keep Scratch cat - position top left */
@@ -1075,7 +1516,7 @@
                 width: 100px !important;
                 height: 100px !important;
                 left: 5% !important;
-                top: 10% !important;
+                top: 15% !important;
             }
 
             .cat-speech {
@@ -1130,6 +1571,57 @@
                 font-size: 1.8rem;
                 margin-bottom: 40px;
             }
+
+            /* About section mobile */
+            .about-intro {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+
+            .about-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .avatar-emoji {
+                font-size: 2.5rem;
+            }
+
+            .about-text h3 {
+                font-size: 1.5rem;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .achievement-card {
+                padding: 20px 15px;
+            }
+
+            .achievement-icon {
+                font-size: 2rem;
+            }
+
+            /* Blog section mobile */
+            .blog-coming-soon {
+                padding: 40px 25px;
+            }
+
+            .coming-soon-icon {
+                font-size: 3rem;
+            }
+
+            .blog-coming-soon h3 {
+                font-size: 1.5rem;
+            }
+
+            .topic-tag {
+                font-size: 0.8rem;
+                padding: 6px 14px;
+            }
         }
 
         /* Mobile - minimal, clean */
@@ -1161,7 +1653,7 @@
             }
 
             .code-rain-container {
-                opacity: 0.08;
+                opacity: 0.15;
             }
 
             /* Scratch cat - top left */
@@ -1169,7 +1661,7 @@
                 width: 70px !important;
                 height: 70px !important;
                 left: 5% !important;
-                top: 8% !important;
+                top: 12% !important;
             }
 
             .cat-speech {
@@ -1256,6 +1748,20 @@
 </head>
 
 <body>
+
+    <!-- Navigation Bar -->
+    <nav class="main-nav" id="mainNav">
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="about.html">About Me</a></li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
 
     <!-- Full Page Code Rain Background -->
     <div class="code-rain-container" id="codeRain"></div>
@@ -1439,6 +1945,11 @@
         </div>
     </section>
 
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>Made with 💖 by Vibha</p>
+    </footer>
+
     <script>
         // ============================================
         // GSAP ANIMATIONS & EFFECTS
@@ -1455,6 +1966,8 @@
                 this.ctx = canvas.getContext('2d');
                 this.particles = [];
                 this.mouse = { x: null, y: null, radius: 150 };
+                this.isRunning = true;
+                this.animationId = null;
 
                 this.resize();
                 this.init();
@@ -1474,7 +1987,8 @@
 
             init() {
                 this.particles = [];
-                const numParticles = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+                // Limit particles to prevent memory issues
+                const numParticles = Math.min(80, Math.floor((this.canvas.width * this.canvas.height) / 15000));
 
                 for (let i = 0; i < numParticles; i++) {
                     this.particles.push({
@@ -1488,7 +2002,24 @@
                 }
             }
 
+            pause() {
+                this.isRunning = false;
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+            }
+
+            resume() {
+                if (!this.isRunning) {
+                    this.isRunning = true;
+                    this.animate();
+                }
+            }
+
             animate() {
+                if (!this.isRunning) return;
+                
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
                 // Update and draw particles
@@ -1520,8 +2051,11 @@
                     this.ctx.fillStyle = p.color;
                     this.ctx.fill();
 
-                    // Draw connections
-                    this.particles.slice(i + 1).forEach(p2 => {
+                    // Draw connections (limit to nearby particles for performance)
+                    const maxConnections = 5;
+                    let connections = 0;
+                    for (let j = i + 1; j < this.particles.length && connections < maxConnections; j++) {
+                        const p2 = this.particles[j];
                         const dx = p.x - p2.x;
                         const dy = p.y - p2.y;
                         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -1533,11 +2067,12 @@
                             this.ctx.strokeStyle = `rgba(201, 168, 124, ${0.2 * (1 - dist / 120)})`;
                             this.ctx.lineWidth = 0.5;
                             this.ctx.stroke();
+                            connections++;
                         }
-                    });
+                    }
                 });
 
-                requestAnimationFrame(() => this.animate());
+                this.animationId = requestAnimationFrame(() => this.animate());
             }
         }
 
@@ -1572,7 +2107,9 @@
                 'think("...")'
             ];
 
-            const numColumns = Math.floor(window.innerWidth / 100);
+            // Limit columns to prevent memory issues
+            const maxColumns = 20;
+            const numColumns = Math.min(maxColumns, Math.floor(window.innerWidth / 100));
 
             for (let i = 0; i < numColumns; i++) {
                 const column = document.createElement('div');
@@ -1799,10 +2336,10 @@
             const cat = document.getElementById('scratchCat');
             const speech = document.getElementById('catSpeech');
 
-            // Position cat at top left, above the Welcome text
+            // Position cat at top left, below the nav bar
             gsap.set(cat, {
                 left: '8%',
-                top: '12%',
+                top: '18%',
                 rotation: -5
             });
 
@@ -2206,60 +2743,63 @@
         });
 
         // --------------------------------------------
-        // 14. PARALLAX ON SCROLL
+        // 14. PARALLAX ON SCROLL (Simplified for smooth scrolling)
         // --------------------------------------------
 
-        // Hero content fades out
+        // Hero content subtle parallax (no fade out)
         gsap.to('.hero-content', {
-            yPercent: -30,
-            opacity: 0,
+            yPercent: -15,
             ease: 'none',
             scrollTrigger: {
                 trigger: '.hero',
                 start: 'top top',
                 end: '50% top',
-                scrub: 1
+                scrub: 0.5
             }
         });
 
-        // Grid floor intensifies
-        gsap.to('.grid-floor', {
-            opacity: 0.3,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: '.hero',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1
-            }
-        });
-
-        // Scroll indicator fades
+        // Scroll indicator fades quickly
         gsap.to('.scroll-indicator', {
             opacity: 0,
-            y: -20,
             scrollTrigger: {
                 trigger: '.hero',
                 start: '5% top',
-                end: '20% top',
-                scrub: true
+                end: '15% top',
+                scrub: 0.5
             }
         });
 
         console.log('🚀 Hero initialized!');
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        
+        // Mobile menu toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
             });
+        });
+        
+        // Shrink nav on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
         });
 
         // --------------------------------------------
@@ -2278,7 +2818,8 @@
                     scrollTrigger: {
                         trigger: card,
                         start: 'top 85%',
-                        toggleActions: 'play none none reverse'
+                        toggleActions: 'play none none none',
+                        once: true
                     }
                 });
             });
@@ -2292,7 +2833,8 @@
                 scrollTrigger: {
                     trigger: '.section-title',
                     start: 'top 85%',
-                    toggleActions: 'play none none reverse'
+                    toggleActions: 'play none none none',
+                    once: true
                 }
             });
         }
@@ -2305,49 +2847,33 @@
         function animateCoursesParallax() {
             // Parallax for section orbs
             gsap.to('.section-orb-1', {
-                yPercent: -30,
-                xPercent: -10,
+                yPercent: -20,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: '.demo-section',
                     start: 'top bottom',
                     end: 'bottom top',
-                    scrub: 2
+                    scrub: 1
                 }
             });
 
             gsap.to('.section-orb-2', {
-                yPercent: 30,
-                xPercent: 10,
+                yPercent: 20,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: '.demo-section',
                     start: 'top bottom',
                     end: 'bottom top',
-                    scrub: 2
+                    scrub: 1
                 }
             });
 
-            // Parallax for course cards at different speeds
-            document.querySelectorAll('.course-card').forEach((card, i) => {
-                const speed = parseFloat(card.dataset.parallax) || 0.1;
+            // Removed card parallax for smoother scrolling
 
-                gsap.to(card, {
-                    yPercent: -10 * (i + 1) * speed,
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: '.demo-section',
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: 1
-                    }
-                });
-            });
-
-            // Create circuit traces for courses section
+            // Create circuit traces for courses section (reduced count)
             const sectionCircuits = document.getElementById('sectionCircuits');
             if (sectionCircuits) {
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < 4; i++) {
                     const trace = document.createElement('div');
                     trace.className = 'circuit-trace' + (Math.random() > 0.5 ? ' vertical' : '');
                     trace.style.cssText = `
@@ -2368,8 +2894,8 @@
                     });
                 }
 
-                // Add floating nodes
-                for (let i = 0; i < 5; i++) {
+                // Add floating nodes (reduced)
+                for (let i = 0; i < 3; i++) {
                     const node = document.createElement('div');
                     node.className = 'circuit-node';
                     node.style.cssText = `
@@ -2394,19 +2920,93 @@
 
         animateCoursesParallax();
 
-        // Smooth scroll for anchor links
+        // Smooth scroll for anchor links (with nav offset)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const navHeight = document.getElementById('mainNav').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
                     });
                 }
             });
         });
+
+        // ============================================
+        // PAGE VISIBILITY API - Pause animations when tab is hidden
+        // ============================================
+        (function() {
+            // Track all CSS animations
+            const animatedElements = document.querySelectorAll('.code-column, .grid-floor, .floating-orb, .scratch-block, .music-note, .piano-keys, .esp32-chip, .waveform-bar');
+            
+            // Store original animation states
+            const originalAnimations = new Map();
+            animatedElements.forEach(el => {
+                originalAnimations.set(el, getComputedStyle(el).animationPlayState);
+            });
+
+            function pauseAllAnimations() {
+                // Pause CSS animations
+                animatedElements.forEach(el => {
+                    el.style.animationPlayState = 'paused';
+                });
+                
+                // Pause particle system
+                if (typeof particleSystem !== 'undefined' && particleSystem.pause) {
+                    particleSystem.pause();
+                }
+                
+                // Pause GSAP
+                if (typeof gsap !== 'undefined') {
+                    gsap.globalTimeline.pause();
+                }
+                
+                console.log('🔌 Animations paused - tab hidden');
+            }
+
+            function resumeAllAnimations() {
+                // Resume CSS animations
+                animatedElements.forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+                
+                // Resume particle system
+                if (typeof particleSystem !== 'undefined' && particleSystem.resume) {
+                    particleSystem.resume();
+                }
+                
+                // Resume GSAP
+                if (typeof gsap !== 'undefined') {
+                    gsap.globalTimeline.resume();
+                }
+                
+                console.log('⚡ Animations resumed - tab visible');
+            }
+
+            // Listen for visibility changes
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    pauseAllAnimations();
+                } else {
+                    resumeAllAnimations();
+                }
+            });
+
+            // Also pause when window loses focus (for desktop)
+            window.addEventListener('blur', () => {
+                // Only pause after a delay to avoid pausing during quick tab switches
+                window.blurTimeout = setTimeout(pauseAllAnimations, 30000); // Pause after 30s of inactivity
+            });
+
+            window.addEventListener('focus', () => {
+                clearTimeout(window.blurTimeout);
+                resumeAllAnimations();
+            });
+        })();
     </script>
 
 </body>
