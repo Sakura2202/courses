@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Vibha | Anime Art & Scratch Projects</title>
+
+    <meta name="description" content="Explore Vibha's creative gallery featuring anime art and interactive Scratch projects.">
+    <meta name="author" content="Vibha Agarwal">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background: #1a1814;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: transparent;
+            overflow-x: hidden;
+            color: #f5f0e8;
+        }
+
+        /* ============================================
+           NAVIGATION BAR
+           ============================================ */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: 
+                linear-gradient(90deg, 
+                    transparent 0%, 
+                    rgba(168, 198, 159, 0.03) 25%, 
+                    rgba(201, 168, 124, 0.05) 50%, 
+                    rgba(168, 198, 159, 0.03) 75%, 
+                    transparent 100%
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(168, 198, 159, 0.03) 20px,
+                    rgba(168, 198, 159, 0.03) 21px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(168, 198, 159, 0.03) 40px,
+                    rgba(168, 198, 159, 0.03) 41px
+                ),
+                rgba(26, 24, 20, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(168, 198, 159, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .main-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(168, 198, 159, 0.4), transparent);
+            transform: translateY(-50%);
+        }
+
+        .main-nav::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            width: 8px;
+            height: 8px;
+            background: rgba(168, 198, 159, 0.5);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px rgba(168, 198, 159, 0.5);
+            animation: nodePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+            50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+        }
+
+        .main-nav.scrolled {
+            padding: 0.7rem 2rem;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(168, 198, 159, 0.02) 20px,
+                    rgba(168, 198, 159, 0.02) 21px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(168, 198, 159, 0.02) 40px,
+                    rgba(168, 198, 159, 0.02) 41px
+                ),
+                rgba(26, 24, 20, 0.95);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #f5f0e8;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #c9a87c, #e8b4b8);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #c9a87c;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: #c9a87c;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: #f5f0e8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ============================================
+           BACKGROUND ORBS
+           ============================================ */
+        .gallery-orb-1 {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(232, 180, 184, 0.1) 0%, transparent 70%);
+            top: 10%;
+            right: -15%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gallery-orb-2 {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(201, 168, 124, 0.1) 0%, transparent 70%);
+            bottom: 20%;
+            left: -10%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ============================================
+           PAGE HEADER
+           ============================================ */
+        .page-header {
+            min-height: 30vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 30px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            background: linear-gradient(135deg, #f5f0e8 0%, #c9a87c 50%, #e8b4b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        /* ============================================
+           GALLERY TABS
+           ============================================ */
+        .gallery-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 2;
+            background: rgba(26, 24, 20, 0.5);
+            border-top: 1px solid rgba(201, 168, 124, 0.1);
+            border-bottom: 1px solid rgba(201, 168, 124, 0.1);
+        }
+
+        .tab-btn {
+            padding: 14px 35px;
+            background: rgba(45, 42, 36, 0.8);
+            border: 2px solid rgba(201, 168, 124, 0.3);
+            border-radius: 30px;
+            color: #f5f0e8;
+            font-size: 1.05rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: rgba(201, 168, 124, 0.6);
+            background: rgba(201, 168, 124, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: rgba(201, 168, 124, 0.25);
+            border-color: #c9a87c;
+            color: #c9a87c;
+            box-shadow: 0 4px 15px rgba(201, 168, 124, 0.2);
+        }
+
+        /* ============================================
+           GALLERY SECTIONS
+           ============================================ */
+        .gallery-section {
+            padding: 0 20px 80px;
+            position: relative;
+            z-index: 2;
+            display: none;
+        }
+
+        .gallery-section.active {
+            display: block;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: #f5f0e8;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 1rem;
+        }
+
+        /* ============================================
+           ANIME ART GALLERY (Masonry Grid)
+           ============================================ */
+        .art-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .art-card {
+            background: rgba(45, 42, 36, 0.6);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(201, 168, 124, 0.15);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(201, 168, 124, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .art-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .art-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .art-card-info {
+            padding: 20px;
+        }
+
+        .art-card-info h3 {
+            color: #f5f0e8;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .art-card-info p {
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Empty state */
+        .empty-gallery {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(45, 42, 36, 0.4);
+            border-radius: 20px;
+            border: 1px dashed rgba(201, 168, 124, 0.3);
+        }
+
+        .empty-gallery-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-gallery h3 {
+            color: rgba(245, 240, 232, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .empty-gallery p {
+            color: rgba(245, 240, 232, 0.5);
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+           SCRATCH PROJECTS (iFrame Embeds)
+           ============================================ */
+        .scratch-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 30px;
+        }
+
+        .scratch-card {
+            background: rgba(45, 42, 36, 0.6);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(201, 168, 124, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .scratch-card:hover {
+            border-color: rgba(201, 168, 124, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .scratch-embed {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            background: #000;
+        }
+
+        .scratch-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .scratch-card-info {
+            padding: 20px;
+        }
+
+        .scratch-card-info h3 {
+            color: #f5f0e8;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .scratch-card-info p {
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .scratch-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #a8c69f;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .scratch-link:hover {
+            color: #c9a87c;
+        }
+
+        /* ============================================
+           LIGHTBOX (for full-size image viewing)
+           ============================================ */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #f5f0e8;
+            font-size: 2rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
+        .lightbox-caption {
+            text-align: center;
+            margin-top: 15px;
+            color: rgba(245, 240, 232, 0.8);
+            font-size: 1rem;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .site-footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(26, 24, 20, 0.9);
+            border-top: 1px solid rgba(201, 168, 124, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .site-footer p {
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                max-width: 300px;
+                height: 100vh;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                background: rgba(26, 24, 20, 0.98);
+                backdrop-filter: blur(20px);
+                transition: right 0.4s ease;
+                border-left: 1px solid rgba(201, 168, 124, 0.2);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.25rem;
+            }
+
+            .gallery-tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .scratch-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .art-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 90px 20px 20px;
+            }
+
+            .art-card img {
+                height: 200px;
+            }
+
+            .scratch-embed {
+                padding-top: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Orbs -->
+    <div class="gallery-orb-1"></div>
+    <div class="gallery-orb-2"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="main-nav" id="mainNav">
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Me</a></li>
+            <li><a href="gallery.html" class="active">Gallery</a></li>
+            <li><a href="blog.html">Blog</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <h1>Gallery</h1>
+        <p class="page-subtitle">My creative corner</p>
+    </header>
+
+    <!-- Gallery Tabs -->
+    <div class="gallery-tabs">
+        <button class="tab-btn active" data-tab="scratch">🎮 Scratch Projects</button>
+        <button class="tab-btn" data-tab="anime">🎨 Anime Art</button>
+    </div>
+
+    <!-- Scratch Projects Section -->
+    <section class="gallery-section active" id="scratch-section">
+        <div class="gallery-container">
+            <div class="scratch-gallery" id="scratchGallery">
+                <!-- Scratch projects will be loaded dynamically from JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Anime Art Section -->
+    <section class="gallery-section" id="anime-section">
+        <div class="gallery-container">
+            <div class="art-gallery" id="artGallery">
+                <!-- Art cards will be loaded dynamically from JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox for full-size images -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">×</button>
+            <img id="lightboxImg" src="" alt="">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>Made with 💖 by Vibha</p>
+    </footer>
+
+    <script>
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // ============================================
+        // GALLERY TABS
+        // ============================================
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.gallery-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                
+                // Update active tab
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Show corresponding section
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === `${tab}-section`) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // ============================================
+        // GALLERY DATA - EDIT THIS TO ADD YOUR CONTENT
+        // ============================================
+        
+        // ANIME ART - Add your images here
+        // Put images in: gallery/anime/ folder
+        const animeArtworks = [
+            // Uncomment and edit to add your artworks:
+            // {
+            //     title: "Artwork Title",
+            //     image: "gallery/anime/your-image.jpg",
+            //     description: "Description of your artwork"
+            // },
+        ];
+
+        // SCRATCH PROJECTS - Add your project IDs here
+        // Just add new objects to this array to add more projects!
+        const scratchProjects = [
+            {
+                title: "Sniper Aim Practice",
+                embedId: "1232869383",
+                description: "Sniper Game with keyboard controls. Press space to toggle zoom, W to shoot. Hit the blue enemy target in the head to score!"
+            },
+            {
+                title: "Autumn Chase",
+                embedId: "913618438",
+                description: "Aim: collect as much candy as possible without dying. Use up and down arrow to move accordingly. Press space to shoot and kill ghosts. Pumpkins are her lives."
+            },
+            {
+                title: "Volleyball simulator",
+                embedId: "1198251346",
+                description: "A simple volleyball game where you control the player to hit the ball over the net. Use arrow keys to move and spacebar to jump."
+            },
+            {
+                title: "Mesmerising rings",
+                embedId: "1113417944",
+                description: "An animated display of colorful, rotating rings that create a mesmerizing visual effect."},
+        ];
+
+        // ============================================
+        // RENDER GALLERIES
+        // ============================================
+        
+        function renderArtGallery() {
+            const gallery = document.getElementById('artGallery');
+            
+            if (animeArtworks.length === 0) {
+                gallery.innerHTML = `
+                    <div class="empty-gallery">
+                        <div class="empty-gallery-icon">🎨</div>
+                        <h3>Coming Soon!</h3>
+                        <p>Anime artwork will be showcased here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            gallery.innerHTML = '';
+            
+            animeArtworks.forEach((art, index) => {
+                const card = document.createElement('div');
+                card.className = 'art-card';
+                card.innerHTML = `
+                    <img src="${art.image}" alt="${art.title}" loading="lazy" onclick="openLightbox('${art.image}', '${art.title}')">
+                    <div class="art-card-info">
+                        <h3>${art.title}</h3>
+                        ${art.description ? `<p>${art.description}</p>` : ''}
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        function renderScratchGallery() {
+            const gallery = document.getElementById('scratchGallery');
+            
+            if (scratchProjects.length === 0) {
+                gallery.innerHTML = `
+                    <div class="empty-gallery" style="grid-column: 1 / -1;">
+                        <div class="empty-gallery-icon">🎮</div>
+                        <h3>Coming Soon!</h3>
+                        <p>Scratch projects will be embedded here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            gallery.innerHTML = '';
+            
+            scratchProjects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'scratch-card';
+                card.innerHTML = `
+                    <div class="scratch-embed">
+                        <iframe 
+                            src="https://scratch.mit.edu/projects/${project.embedId}/embed" 
+                            allowtransparency="true" 
+                            frameborder="0" 
+                            scrolling="no" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="scratch-card-info">
+                        <h3>${project.title}</h3>
+                        ${project.description ? `<p>${project.description}</p>` : ''}
+                        <a href="https://scratch.mit.edu/projects/${project.embedId}" target="_blank" class="scratch-link">
+                            View on Scratch ↗
+                        </a>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        // ============================================
+        // LIGHTBOX
+        // ============================================
+        function openLightbox(imageSrc, caption) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const captionEl = document.getElementById('lightboxCaption');
+            
+            img.src = imageSrc;
+            captionEl.textContent = caption;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close lightbox on background click
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Close lightbox on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        renderArtGallery();
+        renderScratchGallery();
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Simple fade in for gallery cards
+        gsap.utils.toArray('.art-card, .scratch-card').forEach((card, i) => {
+            gsap.from(card, {
+                opacity: 0,
+                y: 30,
+                duration: 0.5,
+                delay: i * 0.1,
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 90%',
+                    toggleActions: 'play none none none',
+                    once: true
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
