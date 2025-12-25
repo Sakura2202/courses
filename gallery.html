@@ -339,10 +339,8 @@
            ANIME ART GALLERY (Masonry Grid)
            ============================================ */
         .art-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: flex-start;
+            column-count: 3;
+            column-gap: 25px;
         }
 
         .art-card {
@@ -351,6 +349,10 @@
             overflow: hidden;
             border: 1px solid rgba(201, 168, 124, 0.15);
             transition: all 0.4s ease;
+            break-inside: avoid;
+            margin-bottom: 25px;
+            display: inline-block;
+            width: 100%;
         }
 
         .art-card:hover {
@@ -586,11 +588,15 @@
             }
 
             .art-gallery {
-                grid-template-columns: 1fr;
+                column-count: 2;
             }
         }
 
         @media (max-width: 480px) {
+            .art-gallery {
+                column-count: 1;
+            }
+
             .pinterest-embed iframe {
                 width: 100%;
                 max-width: 345px;
@@ -657,10 +663,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <p>Made with 💖 by Vibha</p>
-    </footer>
+   
 
     <script>
         // ============================================
@@ -720,15 +723,82 @@
         
         // ART - Add your Pinterest pin IDs here
         // Get the ID and dimensions from Pinterest embed code
-        const artworks = [
-            {
+       const artworks = [
+            {//train by sea
                 pinId: "1143351424165363812",
                 width: 345,
                 height: 325
             },
+            { //link
+                pinId: "1143351424162202686",
+                width: 345,
+                height: 556
+            },
+              { //cafe shop art
+                pinId: "1143351424159956118",
+                width: 345,
+                height: 340
+            },
+                  
+             { // senku
+                pinId: "1143351424143278059",
+                width: 345,
+                height: 600
+            },
+             { // hinata
+                pinId: "1143351424142723778",
+                width: 345,
+                height: 600
+            },
+              { // naruto
+                pinId: "1143351424142054263",
+                width: 345,
+                height: 580
+            },
+              { // volleyball art
+                pinId: "1143351424152321833",
+                width: 345,
+                height: 450
+            },
+                { // kuroo
+                pinId: "1143351424163723186",
+                width: 345,
+                height: 360
+            },
+               { // violet evergarden
+                pinId: "1143351424141450026",
+                width: 345,
+                height: 600
+            },
+            { // inosuke
+                pinId: "1143351424142585902",
+                width: 345,
+                height: 565
+            },
+             { // bachira
+                pinId: "1143351424161558538",
+                width: 345,
+                height: 520
+            },
+            { // nanami
+                pinId: "1143351424154511908",
+                width: 345,
+                height: 520
+            },
+            { // ai hoshino
+                pinId: "1143351424142520024",
+                width: 345,
+                height: 580
+            },
+              { // kageyama
+                pinId: "1143351424152604976",
+                width: 345,
+                height: 380
+            },
             // Add more - width and height are required:
             // { pinId: "xxx", width: 236, height: 450 },
         ];
+
 
         // SCRATCH PROJECTS - Add your project IDs here
         // Just add new objects to this array to add more projects!
