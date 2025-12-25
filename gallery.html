@@ -315,7 +315,7 @@
         }
 
         .gallery-container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -336,35 +336,80 @@
         }
 
         /* ============================================
-           ANIME ART GALLERY (Masonry Grid)
+           CATEGORY TABS (for Art filtering)
+           ============================================ */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(201, 168, 124, 0.3) transparent;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .category-tabs::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background: rgba(201, 168, 124, 0.3);
+            border-radius: 2px;
+        }
+
+        .category-tab {
+            padding: 8px 20px;
+            background: rgba(45, 42, 36, 0.6);
+            border: 1px solid rgba(201, 168, 124, 0.2);
+            border-radius: 20px;
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .category-tab:hover {
+            border-color: rgba(201, 168, 124, 0.5);
+            color: #f5f0e8;
+        }
+
+        .category-tab.active {
+            background: rgba(201, 168, 124, 0.2);
+            border-color: #c9a87c;
+            color: #c9a87c;
+        }
+
+        /* ============================================
+           ART GALLERY (Masonry Grid)
            ============================================ */
         .art-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .art-gallery.cols-3 {
+            display: block;
             column-count: 3;
-            column-gap: 25px;
+            column-gap: 10px;
         }
 
         .art-card {
-            background: rgba(45, 42, 36, 0.6);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(201, 168, 124, 0.15);
-            transition: all 0.4s ease;
             break-inside: avoid;
-            margin-bottom: 25px;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .art-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(201, 168, 124, 0.4);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
         }
 
         .pinterest-embed {
             display: flex;
             justify-content: center;
-            padding: 10px;
         }
 
         .pinterest-embed iframe {
@@ -587,16 +632,16 @@
                 grid-template-columns: 1fr;
             }
 
-            .art-gallery {
-                column-count: 2;
+            .art-gallery,
+            .art-gallery.cols-3 {
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                column-count: unset !important;
             }
         }
 
         @media (max-width: 480px) {
-            .art-gallery {
-                column-count: 1;
-            }
-
             .pinterest-embed iframe {
                 width: 100%;
                 max-width: 345px;
@@ -648,6 +693,9 @@
     <!-- Art Section -->
     <section class="gallery-section" id="art-section">
         <div class="gallery-container">
+            <!-- Category Tabs - Generated dynamically -->
+            <div class="category-tabs" id="categoryTabs"></div>
+            
             <div class="art-gallery" id="artGallery">
                 <!-- Art cards will be loaded dynamically from JavaScript -->
             </div>
@@ -723,81 +771,98 @@
         
         // ART - Add your Pinterest pin IDs here
         // Get the ID and dimensions from Pinterest embed code
-       const artworks = [
-            {//train by sea
+        // category is used for filtering
+        const artworks = [
+            {   // train by sea
                 pinId: "1143351424165363812",
                 width: 345,
-                height: 325
+                height: 325,
+                category: "Scenery"
             },
-            { //link
+            {   // link
                 pinId: "1143351424162202686",
                 width: 345,
-                height: 556
+                height: 556,
+                category: "Anime"
             },
-              { //cafe shop art
+            {   // cafe shop art
                 pinId: "1143351424159956118",
                 width: 345,
-                height: 340
+                height: 340,
+                category: "Scenery"
             },
-                  
-             { // senku
+            {   // senku
                 pinId: "1143351424143278059",
                 width: 345,
-                height: 600
+                height: 600,
+                category: "Anime"
             },
-             { // hinata
+            {   // hinata
                 pinId: "1143351424142723778",
                 width: 345,
-                height: 600
+                height: 600,
+                category: "Anime"
             },
-              { // naruto
+            {   // naruto
                 pinId: "1143351424142054263",
                 width: 345,
-                height: 580
+                height: 580,
+                category: "Anime"
             },
-              { // volleyball art
+            {   // volleyball art
                 pinId: "1143351424152321833",
                 width: 345,
-                height: 450
+                height: 450,
+                category: "Anime"
             },
-                { // kuroo
+            {   // kuroo
                 pinId: "1143351424163723186",
                 width: 345,
-                height: 360
+                height: 360,
+                category: "Anime"
             },
-               { // violet evergarden
+            {   // violet evergarden
                 pinId: "1143351424141450026",
                 width: 345,
-                height: 600
+                height: 600,
+                category: "Anime"
             },
-            { // inosuke
+            {   // inosuke
                 pinId: "1143351424142585902",
                 width: 345,
-                height: 565
+                height: 565,
+                category: "Anime"
             },
-             { // bachira
+            {   // bachira
                 pinId: "1143351424161558538",
                 width: 345,
-                height: 520
+                height: 520,
+                category: "Anime"
             },
-            { // nanami
+            {   // nanami
                 pinId: "1143351424154511908",
                 width: 345,
-                height: 520
+                height: 520,
+                category: "Anime"
             },
-            { // ai hoshino
+            {   // ai hoshino
                 pinId: "1143351424142520024",
                 width: 345,
-                height: 580
+                height: 580,
+                category: "Anime"
             },
-              { // kageyama
+            {   // kageyama
                 pinId: "1143351424152604976",
                 width: 345,
-                height: 380
+                height: 380,
+                category: "Anime"
             },
-            // Add more - width and height are required:
-            // { pinId: "xxx", width: 236, height: 450 },
+            // Add more with category:
+            // { pinId: "xxx", width: 345, height: 450, category: "Watercolour" },
         ];
+
+        // Track current category filter
+        let currentCategory = 'all';
 
 
         // SCRATCH PROJECTS - Add your project IDs here
@@ -828,6 +893,41 @@
         // RENDER GALLERIES
         // ============================================
         
+        function renderCategoryTabs() {
+            const tabsContainer = document.getElementById('categoryTabs');
+            
+            if (artworks.length === 0) {
+                tabsContainer.innerHTML = '';
+                return;
+            }
+            
+            // Extract unique categories
+            const categories = [...new Set(artworks.map(art => art.category).filter(Boolean))];
+            
+            if (categories.length <= 1) {
+                // Hide tabs if only one or no categories
+                tabsContainer.innerHTML = '';
+                return;
+            }
+            
+            // Create tabs HTML
+            let tabsHTML = `<button class="category-tab ${currentCategory === 'all' ? 'active' : ''}" data-category="all">All</button>`;
+            categories.forEach(cat => {
+                tabsHTML += `<button class="category-tab ${currentCategory === cat ? 'active' : ''}" data-category="${cat}">${cat}</button>`;
+            });
+            
+            tabsContainer.innerHTML = tabsHTML;
+            
+            // Add click handlers
+            tabsContainer.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    currentCategory = tab.dataset.category;
+                    renderCategoryTabs();
+                    renderArtGallery();
+                });
+            });
+        }
+
         function renderArtGallery() {
             const gallery = document.getElementById('artGallery');
             
@@ -842,9 +942,35 @@
                 return;
             }
             
+            // Filter by category
+            const filtered = currentCategory === 'all' 
+                ? artworks 
+                : artworks.filter(art => art.category === currentCategory);
+            
+            if (filtered.length === 0) {
+                gallery.innerHTML = `
+                    <div class="empty-gallery">
+                        <div class="empty-gallery-icon">🎨</div>
+                        <h3>No artwork in this category</h3>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Dynamic layout based on item count
+            const count = filtered.length;
+            if (count <= 4) {
+                // Use flexbox for few items - centers nicely
+                gallery.classList.remove('cols-3');
+                gallery.style.columnCount = '';
+            } else {
+                // Use CSS columns for many items - masonry effect
+                gallery.classList.add('cols-3');
+            }
+            
             gallery.innerHTML = '';
             
-            artworks.forEach((art) => {
+            filtered.forEach((art) => {
                 const card = document.createElement('div');
                 card.className = 'art-card';
                 card.innerHTML = `
@@ -934,6 +1060,7 @@
         // ============================================
         // INITIALIZE
         // ============================================
+        renderCategoryTabs();
         renderArtGallery();
         renderScratchGallery();
 
