@@ -776,28 +776,6 @@
         /* --------------------------------------------
    LAYER 6: WAVEFORM
    -------------------------------------------- */
-        .waveform-container {
-            position: absolute;
-            bottom: 25%;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            z-index: 1;
-            opacity: 0.3;
-        }
-
-        .waveform-svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .waveform-path {
-            fill: none;
-            stroke: url(#waveGradient);
-            stroke-width: 2;
-            stroke-linecap: round;
-        }
-
         /* --------------------------------------------
    HERO CONTENT
    -------------------------------------------- */
@@ -1497,11 +1475,6 @@
                 font-size: 1rem;
             }
 
-            /* Waveform lighter */
-            .waveform-container {
-                opacity: 0.15;
-            }
-
             /* Section backgrounds lighter */
             .section-orb-1,
             .section-orb-2,
@@ -1587,10 +1560,6 @@
             }
 
             .circuit-traces {
-                display: none;
-            }
-
-            .waveform-container {
                 display: none;
             }
 
@@ -1791,20 +1760,6 @@
         <div class="floating-orb orb-1"></div>
         <div class="floating-orb orb-2"></div>
         <div class="floating-orb orb-3"></div>
-
-        <!-- Layer 6: Waveform -->
-        <div class="waveform-container">
-            <svg class="waveform-svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
-                <defs>
-                    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#c9a87c" />
-                        <stop offset="50%" stop-color="#e8b4b8" />
-                        <stop offset="100%" stop-color="#c9a87c" />
-                    </linearGradient>
-                </defs>
-                <path class="waveform-path" id="waveformPath"></path>
-            </svg>
-        </div>
 
         <!-- Hero Content -->
         <div class="hero-content">
@@ -2012,34 +1967,6 @@
 
         // Initialize particles
         const particleSystem = new ParticleConstellation(document.getElementById('particlesCanvas'));
-
-        // --------------------------------------------
-        // 4. ANIMATED WAVEFORM
-        // --------------------------------------------
-        function animateWaveform() {
-            const path = document.getElementById('waveformPath');
-            let phase = 0;
-
-            function draw() {
-                let d = 'M 0 50';
-
-                for (let x = 0; x <= 1440; x += 10) {
-                    const y = 50 +
-                        Math.sin((x * 0.02) + phase) * 20 +
-                        Math.sin((x * 0.01) + phase * 0.5) * 15 +
-                        Math.sin((x * 0.03) + phase * 1.5) * 10;
-                    d += ` L ${x} ${y}`;
-                }
-
-                path.setAttribute('d', d);
-                phase += 0.03;
-                requestAnimationFrame(draw);
-            }
-
-            draw();
-        }
-
-        animateWaveform();
 
         // --------------------------------------------
         // 5. FLOATING SCRATCH BLOCKS
@@ -2797,7 +2724,7 @@
         // ============================================
         (function() {
             // Track all CSS animations
-            const animatedElements = document.querySelectorAll('.grid-floor, .floating-orb, .scratch-block, .music-note, .piano-keys, .esp32-chip, .waveform-bar');
+            const animatedElements = document.querySelectorAll('.grid-floor, .floating-orb, .scratch-block, .music-note, .piano-keys, .esp32-chip');
             
             // Store original animation states
             const originalAnimations = new Map();
